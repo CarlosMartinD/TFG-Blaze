@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 
 public class MovementEngine
 {
@@ -60,8 +62,6 @@ public class MovementEngine
         visitedSquares.Add(tile);
     }
 
-
-
     public void ResetMap()
     {
         foreach (Tile tile in highlitedTiles)
@@ -72,4 +72,6 @@ public class MovementEngine
         highlitedTiles.Clear();
         GameMaster.getInstance().selectedUnit = null;
     }
+
+    
 }

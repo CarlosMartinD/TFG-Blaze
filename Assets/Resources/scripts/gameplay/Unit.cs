@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class Unit : MonoBehaviour
 {   
     private bool hasMoved = false;
     public bool isPlayer = true;
-    public int movementCapacity = 2;
     private int moveSpeed = 2;
+    public int movementCapacity = 2;
+    public Tile placedTile;
 
     public bool CanMove()
     {
@@ -15,29 +17,36 @@ public class Unit : MonoBehaviour
         return !master.IsEnemyTurn() == isPlayer;
     }
 
-    public void Move(Tile tile)
+    public void Move(Tile to)
     {
-        if(!MovementEngine.GetInstance().highlitedTiles.Contains(tile))
+        if(!MovementEngine.GetInstance().highlitedTiles.Contains(to))
         {
             return;
         }
-        StartCoroutine(StartMovement(tile));
+
+        PathFinder pathFinder = new PathFinder();
+        Stack<Tile> tilesToMove = pathFinder.findShortestPath(placedTile, to, MovementEngine.GetInstance().highlitedTiles);
+        StartCoroutine(StartMovement(tilesToMove));
+        placedTile.unitPlaced = null;
+        placedTile = to;
+        placedTile.unitPlaced = this;
     }
 
-    IEnumerator StartMovement(Tile tilePos)
+    IEnumerator StartMovement(Stack<Tile> path)
     {
-        Vector3 position = tilePos.transform.TransformPoint(Vector3.zero);
-        position.z = -2;
-        while (transform.position.x != position.x)
+        while(path.Count > 0)
         {
-            transform.position = Vector2.MoveTowards(transform.position, new Vector2(position.x, transform.position.y), moveSpeed * Time.deltaTime);
-            yield return null;
-        }
+            Tile nextTile = path.Pop();
+            Vector3 targetPosition = nextTile.transform.position;
+            targetPosition.z = -2;
 
-        while (transform.position.y != position.y)
-        {
-            transform.position = Vector2.MoveTowards(transform.position, new Vector2(position.x, position.y), moveSpeed * Time.deltaTime);
-            yield return null;
+            while (Vector2.Distance(transform.position, targetPosition) > 0.01f)
+            {
+                transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+                yield return null;
+            }
+            transform.position = targetPosition;
+            yield return new WaitForEndOfFrame();
         }
     }
 }
