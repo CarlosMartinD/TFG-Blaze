@@ -4,9 +4,7 @@ using UnityEngine;
 public class GameMaster : MonoBehaviour
 {
     private static GameMaster gameMaster;
-    public Unit selectedUnit;
-    private HashSet<Tile> highlitedTiles = new HashSet<Tile>();
-
+    public Unit selectedUnit;   
     public GameObject mapParent;
     public int mapWidth;
     public int mapHeight;
@@ -41,7 +39,6 @@ public class GameMaster : MonoBehaviour
 
    private void EndTurn()
     {
-        MovementEngine.GetInstance().ResetMap();
         enemyTurn = !enemyTurn;
 
         if(selectedUnit != null)
