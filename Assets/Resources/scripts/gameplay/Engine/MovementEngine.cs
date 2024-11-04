@@ -5,7 +5,6 @@ using UnityEditor.Experimental.GraphView;
 public class MovementEngine
 {
 
-    public HashSet<Tile> highlitedTiles = new HashSet<Tile>();
     private static MovementEngine movementEngine;
 
     private MovementEngine()
@@ -23,55 +22,53 @@ public class MovementEngine
         return movementEngine;
     }
 
-    public void GetWalkableTiles(Tile tile, Unit unit)
+    public ISet<Tile> GetTilesOnRange(Tile from, int range)
     {
-        GameMaster gameMaster = GameMaster.getInstance();
-        int maximunX = gameMaster.mapWidth;
-        int maximunY = gameMaster.mapHeight;
 
         HashSet<Tile> visitedSquares = new HashSet<Tile>
         {
-            tile
+            from
         };
-        if (tile.x + 1 < maximunX) { HighLightAdyenctTilesToHighLight(tile.x + 1, tile.y, unit.movementCapacity, visitedSquares); }
-        if (tile.x - 1 >= 0) { HighLightAdyenctTilesToHighLight(tile.x - 1, tile.y, unit.movementCapacity, visitedSquares); }
-        if (tile.y + 1 < maximunY) { HighLightAdyenctTilesToHighLight(tile.x, tile.y + 1, unit.movementCapacity, visitedSquares); }
-        if (tile.y - 1 >= 0) { HighLightAdyenctTilesToHighLight(tile.x, tile.y - 1, unit.movementCapacity, visitedSquares); }
+
+
+        HashSet<Tile> setToFill = new HashSet<Tile>();
+        MoveIntoNeighbourds(from, range, visitedSquares, setToFill);
+        return setToFill;
     }
 
-    private void HighLightAdyenctTilesToHighLight(int x, int y, int movementPosible, HashSet<Tile> visitedSquares)
+    private void VisitTileUnderCondition(Tile from, int movementPosible, ISet<Tile> visitedSquares, ISet<Tile> setToFill)
     {
-        GameMaster gameMaster = GameMaster.getInstance();
-        Tile tile = gameMaster.mapMatrix[x, y];
-        if (movementPosible == 0 || visitedSquares.Contains(tile))
+        if (movementPosible < 0 || visitedSquares.Contains(from))
         {
             return;
         }
 
+        MoveIntoNeighbourds(from, movementPosible, visitedSquares, setToFill);
+        setToFill.Add(from);
+        visitedSquares.Add(from);
+    }
+
+    private void MoveIntoNeighbourds(Tile from, int movementPossible, ISet<Tile> visitedSquares, ISet<Tile> setToFill)
+    {
+        GameMaster gameMaster = GameMaster.getInstance();
         int maximunX = gameMaster.mapWidth;
         int maximunY = gameMaster.mapHeight;
+        Tile [,] map = gameMaster.mapMatrix;
+        
+        int[][] variation = new int[][] { new int[] { 1, 0 }, new int[] { -1, 0 }, new int[] { 0, 1 }, new int[] { 0, -1 } };
 
-        int reducedMovement = movementPosible - 1;
-        if (x + 1 < maximunX) { HighLightAdyenctTilesToHighLight(x + 1, y, reducedMovement, visitedSquares); }
-        if (x - 1 >= 0) { HighLightAdyenctTilesToHighLight(x - 1, y, reducedMovement, visitedSquares); }
-        if (y + 1 < maximunY) { HighLightAdyenctTilesToHighLight(x, y + 1, reducedMovement, visitedSquares); }
-        if (y - 1 >= 0) { HighLightAdyenctTilesToHighLight(x, y - 1, reducedMovement, visitedSquares); }
-
-        tile.Highlight();
-        highlitedTiles.Add(tile);
-        visitedSquares.Add(tile);
-    }
-
-    public void ResetMap()
-    {
-        foreach (Tile tile in highlitedTiles)
+        foreach (int[] movement in variation)
         {
-            tile.Reset();
+            int newX = from.x + movement[0];
+            int newY = from.y + movement[1];
+
+            bool checkBoundariesX = newX >= 0 && newX < maximunX;
+            bool checkBoundariesY = newY >= 0 && newY < maximunY;
+
+            if (checkBoundariesX && checkBoundariesY)
+            {
+                VisitTileUnderCondition(map[newX, newY], movementPossible - 1, visitedSquares, setToFill);
+            }
         }
-
-        highlitedTiles.Clear();
-        GameMaster.getInstance().selectedUnit = null;
     }
-
-    
 }

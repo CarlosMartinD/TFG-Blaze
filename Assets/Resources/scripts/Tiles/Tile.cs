@@ -1,4 +1,5 @@
 
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
@@ -17,16 +18,17 @@ public class Tile : MonoBehaviour
     void OnMouseDown()
     {
         GameMaster gameMaster = GameMaster.getInstance();
-        bool selectableMoveSquare = gameMaster.selectedUnit == null && unitPlaced != null && unitPlaced.CanMove();
+        List<OnTileClickedStrategy> clickedStrategies = new List<OnTileClickedStrategy>();
+        clickedStrategies.Add(new MovementCandidatesOnTileClick());
+        clickedStrategies.Add(new MovementStrategyOnTileClick());
 
-        if (selectableMoveSquare)
-        {
-            MovementEngine.GetInstance().GetWalkableTiles(this, unitPlaced);
-             gameMaster.selectedUnit = unitPlaced;
-        } else if(gameMaster.selectedUnit != null)
-        {
-            gameMaster.selectedUnit.Move(this);
-        }
+        clickedStrategies.ForEach(strategy => { 
+            if(strategy.IsApplicableStrategy(this))
+            {
+                strategy.ExecuteStrategy(this);
+            }
+        });
+        
     }
 
     private void OnMouseEnter()
@@ -44,9 +46,14 @@ public class Tile : MonoBehaviour
         return true;
     }
 
-    public void Highlight()
+    public void Highlight(Color color)
     {
-        spriteRenderer.color = Color.red;
+        spriteRenderer.color = color;
+    }
+
+    public void CleanHighLight()
+    {
+        spriteRenderer.color = Color.white;
     }
 
     public void Reset()
