@@ -10,6 +10,8 @@ public class GameMaster : MonoBehaviour
     public int mapHeight;
     public Tile[,] mapMatrix;
 
+    public List<Unit> allyUnits;
+    public List<Unit> enemyUnits;
     private bool enemyTurn = false;
 
     public GameMaster()
@@ -75,6 +77,7 @@ public class GameMaster : MonoBehaviour
                         mapMatrix[x, y] = tileComponent;
                         tileComponent.x = x;
                         tileComponent.y = y;
+                        assignUnit(tileComponent);
                     }
                 }
                 else
@@ -88,5 +91,16 @@ public class GameMaster : MonoBehaviour
     public bool IsEnemyTurn()
     {
         return enemyTurn;
+    }
+
+    private void assignUnit(Tile tile)
+    {
+        Unit unitPlaced = tile.unitPlaced;
+        if (unitPlaced == null)
+        {
+            return;
+        }
+
+        (unitPlaced.isPlayer ? allyUnits : enemyUnits).Add(unitPlaced);
     }
 }
