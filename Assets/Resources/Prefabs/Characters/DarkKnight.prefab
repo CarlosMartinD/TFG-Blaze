@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 4329259664647383568}
   - component: {fileID: -5294879857426886142}
   - component: {fileID: 5603368062530067406}
+  - component: {fileID: 1711545061382624308}
   m_Layer: 0
   m_Name: DarkKnight
   m_TagString: Untagged
@@ -180,7 +181,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be0fdf771aad3d945b57e839548f89af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementCapacity: 2
+  enemiesInRange: []
+  stats: {fileID: 0}
+  isPlayer: 1
+  movementCapacity: 3
+  rangeAttack: 1
+  placedTile: {fileID: 0}
+--- !u!114 &1711545061382624308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2220876911804615723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90e16ac05e5c4fa48822f670932b1881, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemiesInRange: []
+  stats: {fileID: 0}
+  isPlayer: 1
+  movementCapacity: 3
+  rangeAttack: 1
+  placedTile: {fileID: 0}
 --- !u!1 &3359519865204591023
 GameObject:
   m_ObjectHideFlags: 0
