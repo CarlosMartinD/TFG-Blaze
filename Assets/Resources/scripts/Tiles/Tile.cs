@@ -19,16 +19,18 @@ public class Tile : MonoBehaviour
     {
         GameMaster gameMaster = GameMaster.getInstance();
         List<OnTileClickedStrategy> clickedStrategies = new List<OnTileClickedStrategy>();
+
+        clickedStrategies.Add(new AttackTile());
         clickedStrategies.Add(new MovementCandidatesOnTileClick());
         clickedStrategies.Add(new MovementStrategyOnTileClick());
 
-        clickedStrategies.ForEach(strategy => { 
-            if(strategy.IsApplicableStrategy(this))
+        foreach (OnTileClickedStrategy onTileClickedStrategy in clickedStrategies)
+        {
+            if (onTileClickedStrategy.IsApplicableStrategy(this))
             {
-                strategy.ExecuteStrategy(this);
+                onTileClickedStrategy.ExecuteStrategy(this);
             }
-        });
-        
+        }
     }
 
     private void OnMouseEnter()
