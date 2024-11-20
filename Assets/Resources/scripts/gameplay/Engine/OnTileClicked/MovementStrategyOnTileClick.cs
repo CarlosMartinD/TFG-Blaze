@@ -12,6 +12,6 @@ public class MovementStrategyOnTileClick : OnTileClickedStrategy
     bool OnTileClickedStrategy.IsApplicableStrategy(Tile tile)
     {
         GameMaster gameMaster = GameMaster.getInstance();
-        return gameMaster.selectedUnit != null;
+        return gameMaster.selectedUnit != null && gameMaster.selectedUnit.CanMove();
     }
 }

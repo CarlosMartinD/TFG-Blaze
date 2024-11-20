@@ -44,6 +44,26 @@ public class PriorityQueue<T>
         return item;
     }
 
+    public KeyValuePair<int, T> DequeueWithPrio()
+    {
+        if (Count == 0)
+        {
+            throw new InvalidOperationException("The priority queue is empty.");
+        }
+
+        int firstKey = _storage.Keys.Min();
+        var queue = _storage[firstKey];
+        T item = queue.Dequeue();
+        Count--;
+
+        if (queue.Count == 0)
+        {
+            _storage.Remove(firstKey);
+        }
+
+        return new KeyValuePair<int, T>(firstKey, item);
+    }
+
     public T Peek()
     {
         if (Count == 0)

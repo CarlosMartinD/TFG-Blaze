@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor.Experimental.GraphView;
 
 public class MovementEngine
@@ -7,9 +8,13 @@ public class MovementEngine
 
     private static MovementEngine movementEngine;
 
+    private static Comparer<int> descendingComparer;
+
+    private static int[][]  variation;
     private MovementEngine()
     {
-
+        descendingComparer = Comparer<int>.Create((x, y) => y.CompareTo(x));
+        variation = new int[][] { new int[] { 0, -1 }, new int[] { 1, 0 }, new int[] { -1, 0 }, new int[] { 0, 1 } };
     }
 
     public static MovementEngine GetInstance()
@@ -25,49 +30,58 @@ public class MovementEngine
     public ISet<Tile> GetTilesOnRange(Tile from, int range)
     {
 
-        HashSet<Tile> visitedSquares = new HashSet<Tile>
-        {
-            from
-        };
-
-
-        HashSet<Tile> setToFill = new HashSet<Tile>();
-        MoveIntoNeighbourds(from, range, visitedSquares, setToFill);
-        return setToFill;
+        HashSet<Tile> visitedSquares = new HashSet<Tile>{};
+        PriorityQueue<Tile> toVisit = new PriorityQueue<Tile>(descendingComparer);
+        toVisit.Enqueue(from, range);
+        MoveIntoNeighbourds(visitedSquares, toVisit, tile => true);
+        visitedSquares.Remove(from);
+        return visitedSquares;
     }
 
-    private void VisitTileUnderCondition(Tile from, int movementPosible, ISet<Tile> visitedSquares, ISet<Tile> setToFill)
+    public ISet<Tile> GetTilesOnRange(Tile from, int range, Func<Tile, bool> conditionToVisit)
     {
-        if (movementPosible < 0 || visitedSquares.Contains(from))
-        {
-            return;
-        }
 
-        MoveIntoNeighbourds(from, movementPosible, visitedSquares, setToFill);
-        setToFill.Add(from);
-        visitedSquares.Add(from);
+        HashSet<Tile> visitedSquares = new HashSet<Tile> { };
+        PriorityQueue<Tile> toVisit = new PriorityQueue<Tile>(descendingComparer);
+        toVisit.Enqueue(from, range);
+        MoveIntoNeighbourds(visitedSquares, toVisit, conditionToVisit);
+        visitedSquares.Remove(from);
+        return visitedSquares;
     }
 
-    private void MoveIntoNeighbourds(Tile from, int movementPossible, ISet<Tile> visitedSquares, ISet<Tile> setToFill)
+    private void MoveIntoNeighbourds(ISet<Tile> visitedSquares, PriorityQueue<Tile> toVisit, Func<Tile, bool> conditionToVisit)
     {
+
         GameMaster gameMaster = GameMaster.getInstance();
         int maximunX = gameMaster.mapWidth;
         int maximunY = gameMaster.mapHeight;
-        Tile [,] map = gameMaster.mapMatrix;
-        
-        int[][] variation = new int[][] { new int[] { 1, 0 }, new int[] { -1, 0 }, new int[] { 0, 1 }, new int[] { 0, -1 } };
+        Tile[,] map = gameMaster.mapMatrix;
 
-        foreach (int[] movement in variation)
+        while (!toVisit.IsEmpty())
         {
-            int newX = from.x + movement[0];
-            int newY = from.y + movement[1];
+            KeyValuePair <int, Tile> visiting = toVisit.DequeueWithPrio();
+            visitedSquares.Add(visiting.Value);
 
-            bool checkBoundariesX = newX >= 0 && newX < maximunX;
-            bool checkBoundariesY = newY >= 0 && newY < maximunY;
-
-            if (checkBoundariesX && checkBoundariesY)
+            if(visiting.Key <= 0)
             {
-                VisitTileUnderCondition(map[newX, newY], movementPossible - 1, visitedSquares, setToFill);
+                continue;
+            }
+
+            foreach (int[] movement in variation)
+            {
+                int newX = visiting.Value.x + movement[0];
+                int newY = visiting.Value.y + movement[1];
+
+                bool checkBoundariesX = newX >= 0 && newX < maximunX;
+                bool checkBoundariesY = newY >= 0 && newY < maximunY;
+
+                bool passToNextTile = !checkBoundariesX || !checkBoundariesY || visitedSquares.Contains(map[newX, newY]) || !conditionToVisit.Invoke(map[newX, newY]);
+                if (passToNextTile)
+                {
+                    continue;
+                }
+
+                toVisit.Enqueue(map[newX, newY], visiting.Key - 1);
             }
         }
     }
