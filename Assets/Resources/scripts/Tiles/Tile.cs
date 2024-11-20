@@ -7,6 +7,7 @@ public class Tile : MonoBehaviour
     public int x, y;
     public float hoverAmount;
     public Unit unitPlaced;
+    public Obstacles obstacles;
     private SpriteRenderer spriteRenderer;
 
     private void Start()
@@ -21,8 +22,8 @@ public class Tile : MonoBehaviour
         List<OnTileClickedStrategy> clickedStrategies = new List<OnTileClickedStrategy>();
 
         clickedStrategies.Add(new AttackTile());
-        clickedStrategies.Add(new MovementCandidatesOnTileClick());
         clickedStrategies.Add(new MovementStrategyOnTileClick());
+        clickedStrategies.Add(new MovementCandidatesOnTileClick());
 
         foreach (OnTileClickedStrategy onTileClickedStrategy in clickedStrategies)
         {
@@ -45,7 +46,7 @@ public class Tile : MonoBehaviour
 
     public bool IsClear()
     {
-        return true;
+        return unitPlaced == null && obstacles == null;
     }
 
     public void Highlight(Color color)
