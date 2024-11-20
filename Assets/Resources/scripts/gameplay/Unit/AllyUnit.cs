@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class AllyUnit : Unit
 {
-    protected new Color highlightColor =  Color.red;
-
+    public AllyUnit() { 
+        highlightColor = Color.red;
+    }
     public bool CanMove()
     {
         GameMaster master = FindObjectOfType<GameMaster>();

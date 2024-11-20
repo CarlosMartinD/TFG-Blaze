@@ -43,9 +43,16 @@ public class GameMaster : MonoBehaviour
     {
         enemyTurn = !enemyTurn;
 
-        if(selectedUnit != null)
+
+        if (selectedUnit != null)
         {
             selectedUnit = null;
+        }
+
+        if (enemyTurn)
+        {
+            EnemyAI enemyAI = FindObjectOfType<EnemyAI>();
+            enemyAI.OnTurnEnemyStarted();
         }
     }
 
@@ -101,6 +108,16 @@ public class GameMaster : MonoBehaviour
             return;
         }
 
-        (unitPlaced.isPlayer ? allyUnits : enemyUnits).Add(unitPlaced);
+        List<Unit> unitListToAssign;
+        if(unitPlaced is AllyUnit)
+        {
+            unitListToAssign = allyUnits;
+        } else
+        {
+            unitListToAssign = enemyUnits;
+
+        }
+
+        unitListToAssign.Add(unitPlaced);
     }
 }

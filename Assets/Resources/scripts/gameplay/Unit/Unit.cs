@@ -8,7 +8,8 @@ public class Unit : MonoBehaviour
     
     protected bool hasMoved = false;
     protected Color highlightColor;
-    protected ISet<Tile> movementCandidates;
+    public ISet<Tile> movementCandidates;
+
     public List<Tile> enemiesInRange = new List<Tile>();
 
     public Stats stats;
@@ -18,19 +19,27 @@ public class Unit : MonoBehaviour
     public int rangeAttack = 1;
     public Tile placedTile;
 
+    private bool onAnimation = false;
+
     public bool CanMove()
     {
-        return true;
+        return !hasMoved;
     }
 
     public void ShowMovementCadidates()
     {
-        movementCandidates = MovementEngine.GetInstance().GetTilesOnRange(placedTile, movementCapacity);
+        movementCandidates = MovementEngine.GetInstance().GetTilesOnRange(placedTile, movementCapacity, tile => tile.IsClear());
         foreach (Tile item in movementCandidates)
         {
-            item.Highlight(highlightColor);
+            item.Highlight(Color.red);
         }
     }
+
+    public ISet<Tile> MovementCandidates()
+    {
+        return MovementEngine.GetInstance().GetTilesOnRange(placedTile, movementCapacity);
+    }
+
     public void Attack(Unit toAttack)
     {
         if(toAttack == null || toAttack.Equals(this))
@@ -40,7 +49,7 @@ public class Unit : MonoBehaviour
 
         Stats enemyStatus = toAttack.stats;
 
-        int hitChance = Math.Min(0, 100 - Math.Abs(enemyStatus.velocity - this.stats.velocity));
+        int hitChance = Math.Max(0, 100 - Math.Abs(enemyStatus.velocity - this.stats.velocity));
            
         System.Random random = new System.Random();
 
@@ -59,6 +68,11 @@ public class Unit : MonoBehaviour
         }
 
         enemiesInRange.Clear();
+    }
+
+    public int DamageRealized(Stats rivalStats)
+    {
+        return Math.Max(0, this.stats.attack - rivalStats.deffense);
     }
 
     public void Move(Tile to)
@@ -80,7 +94,7 @@ public class Unit : MonoBehaviour
 
     IEnumerator StartMovement(Stack<Tile> path)
     {
-
+        onAnimation = true;
         yield return move(path);
         foreach (Tile movementCandidate in movementCandidates)
         {
@@ -88,8 +102,9 @@ public class Unit : MonoBehaviour
         }
 
         movementCandidates.Clear();
-
-        yield return detectEnemies();
+        highlightEnemies();
+        yield return highlightEnemies();
+        onAnimation = false;
     }
 
     private IEnumerator move(Stack<Tile> path)
@@ -112,35 +127,13 @@ public class Unit : MonoBehaviour
         }
     }
 
-    private List<Tile> detectEnemiesInRange()
+
+    private IEnumerator highlightEnemies()
     {
-        ISet<Tile> candidateTilesWithEnemies = MovementEngine.GetInstance().GetTilesOnRange(placedTile, rangeAttack);
-        List<Tile> unitsInRange = new List<Tile>();
-
-        foreach (Tile candidateTileWithEnemy in candidateTilesWithEnemies)
+        foreach (Tile tileWithEnemy in detectEnemiesInRange(rangeAttack))
         {
-            if (candidateTileWithEnemy.unitPlaced == null)
-            {
-                continue;
-            }
-
-            candidateTileWithEnemy.Highlight(Color.red);
-            unitsInRange.Add(candidateTileWithEnemy);
-        }
-
-        return unitsInRange;
-    }
-    private IEnumerator detectEnemies()
-    {
-        ISet<Tile> candidateTilesWithEnemies = MovementEngine.GetInstance().GetTilesOnRange(placedTile, rangeAttack);
-        foreach (Tile candidateTileWithEnemy in candidateTilesWithEnemies)
-        {
-            if (candidateTileWithEnemy.unitPlaced == null)
-            {
-                continue;
-            }
-            candidateTileWithEnemy.Highlight(Color.red);
-            enemiesInRange.Add(candidateTileWithEnemy);
+            tileWithEnemy.Highlight(Color.red);
+            enemiesInRange.Add(tileWithEnemy);
             yield return null;
         }
 
@@ -150,4 +143,26 @@ public class Unit : MonoBehaviour
         }
     }
 
+    public List<Tile> detectEnemiesInRange(int range)
+    {
+        ISet<Tile> candidateTilesWithEnemies = MovementEngine.GetInstance().GetTilesOnRange(placedTile, range);
+        List<Tile> unitsInRange = new List<Tile>();
+
+        foreach (Tile candidateTileWithEnemy in candidateTilesWithEnemies)
+        {
+            if (candidateTileWithEnemy.unitPlaced == null || !unitIsEnemy(candidateTileWithEnemy.unitPlaced))
+            {
+                continue;
+            }
+
+            unitsInRange.Add(candidateTileWithEnemy);
+        }
+
+        return unitsInRange;
+    }
+
+    private bool unitIsEnemy(Unit unit)
+    {
+        return unit.isPlayer == isPlayer;
+    }
 }

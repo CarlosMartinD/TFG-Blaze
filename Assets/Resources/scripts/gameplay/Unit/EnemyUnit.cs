@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class EnemyUnit : Unit
 {
-    protected new Color highlightColor = Color.gray;
-
+    public EnemyUnit()
+    {
+        this.isPlayer = false;
+        this.highlightColor = Color.gray;
+    }
 }
