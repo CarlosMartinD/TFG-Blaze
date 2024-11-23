@@ -393,7 +393,7 @@ MonoBehaviour:
   movementCapacity: 3
   rangeAttack: 1
   placedTile: {fileID: 0}
-  isPlayer: 1
+  damageIcon: {fileID: 4190662045545573026, guid: 3997e616b71de294bac32e4aa20dd927, type: 3}
 --- !u!114 &8493614762490697625
 MonoBehaviour:
   m_ObjectHideFlags: 0

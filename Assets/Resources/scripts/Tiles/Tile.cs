@@ -24,7 +24,6 @@ public class Tile : MonoBehaviour
         clickedStrategies.Add(new AttackTile());
         clickedStrategies.Add(new MovementStrategyOnTileClick());
         clickedStrategies.Add(new MovementCandidatesOnTileClick());
-
         foreach (OnTileClickedStrategy onTileClickedStrategy in clickedStrategies)
         {
             if (onTileClickedStrategy.IsApplicableStrategy(this))

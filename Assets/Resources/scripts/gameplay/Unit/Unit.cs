@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Unit : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class Unit : MonoBehaviour
     public int movementCapacity = 3;
     public int rangeAttack = 1;
     public Tile placedTile;
+    public DamageIcon damageIcon;
 
     private bool onAnimation = false;
 
@@ -58,11 +60,13 @@ public class Unit : MonoBehaviour
             return;
         }
 
-
         int lifePoints = this.stats.attack - enemyStatus.deffense;
         stats.LifePointsVariation(lifePoints);
 
-        foreach(Tile enemyInRange in enemiesInRange)
+        Vector3 enemyPosition = toAttack.transform.position;
+        DamageIcon.Instantiate(damageIcon, new Vector3(enemyPosition.x, enemyPosition.y, -3), lifePoints);
+
+        foreach (Tile enemyInRange in enemiesInRange)
         {
             enemyInRange.CleanHighLight();
         }
