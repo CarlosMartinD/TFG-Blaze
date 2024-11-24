@@ -8,6 +8,7 @@ public class Tile : MonoBehaviour
     public float hoverAmount;
     public Unit unitPlaced;
     public Obstacles obstacles;
+
     private SpriteRenderer spriteRenderer;
 
     private void Start()
@@ -22,13 +23,16 @@ public class Tile : MonoBehaviour
         List<OnTileClickedStrategy> clickedStrategies = new List<OnTileClickedStrategy>();
 
         clickedStrategies.Add(new AttackTile());
+        clickedStrategies.Add(new UnselectUnitTileStrategy());
         clickedStrategies.Add(new MovementStrategyOnTileClick());
         clickedStrategies.Add(new MovementCandidatesOnTileClick());
+
         foreach (OnTileClickedStrategy onTileClickedStrategy in clickedStrategies)
         {
             if (onTileClickedStrategy.IsApplicableStrategy(this))
             {
                 onTileClickedStrategy.ExecuteStrategy(this);
+                return;
             }
         }
     }

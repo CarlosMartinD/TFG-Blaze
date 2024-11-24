@@ -4,7 +4,8 @@ using UnityEngine;
 public class GameMaster : MonoBehaviour
 {
     private static GameMaster gameMaster;
-    public Unit selectedUnit;   
+    public Unit selectedUnit;
+    public ISet<Unit> enemySelectedUnits;
     public GameObject mapParent;
     public int mapWidth;
     public int mapHeight;
@@ -14,9 +15,13 @@ public class GameMaster : MonoBehaviour
     public List<Unit> enemyUnits;
     private bool enemyTurn = false;
 
+    public bool somethingTakingAction;
+
     public GameMaster()
     {
         gameMaster = this;
+        somethingTakingAction = false;
+        enemySelectedUnits = new HashSet<Unit>();    
     }
 
     public static GameMaster getInstance()
