@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -13,7 +11,6 @@ public class DamageIcon : MonoBehaviour
 
     void Start()
     {
-        Instantiate(particleEffect, transform.position, Quaternion.identity);
         Invoke("Destruction", lifetime);
     }
 
@@ -28,6 +25,5 @@ public class DamageIcon : MonoBehaviour
     void Destruction()
     {
         Destroy(gameObject);
-        Destroy(particleEffect);
     }
 }
