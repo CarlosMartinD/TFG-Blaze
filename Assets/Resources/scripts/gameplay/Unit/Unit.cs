@@ -106,10 +106,11 @@ public class Unit : MonoBehaviour
 
     public void takeDamage(int damage)
     {
+        DamageIcon ins = DamageIcon.Instantiate(damageIcon, transform.position, damage);
+        animator.SetTrigger("shake");
         if (!stats.LifePointsVariation(damage))
         {
             this.highlightColor = Color.gray;
-            DamageIcon ins = DamageIcon.Instantiate(damageIcon, transform.position, damage);
             Destroy(gameObject, ins.lifetime);
         }
     }
