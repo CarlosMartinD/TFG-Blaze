@@ -6,7 +6,8 @@ public class MovementStrategyOnTileClick : OnTileClickedStrategy
 {
     void OnTileClickedStrategy.ExecuteStrategy(Tile tile)
     {
-        GameMaster.getInstance().selectedUnit.Move(tile);
+        Unit unitToMove = GameMaster.getInstance().selectedUnit;
+        unitToMove.StartCoroutine(unitToMove.Move(tile));
     }
 
     bool OnTileClickedStrategy.IsApplicableStrategy(Tile tile)

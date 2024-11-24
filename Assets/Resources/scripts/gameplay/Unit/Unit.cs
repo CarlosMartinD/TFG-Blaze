@@ -23,6 +23,7 @@ public class Unit : MonoBehaviour
     protected Color highlightColor;
 
     private Animator animator;
+    private GameMaster gameMaster;  
     public UnitMovement unitMovement;
     public Combat combat;
 
@@ -31,10 +32,10 @@ public class Unit : MonoBehaviour
 
         EngineDependencyInjector engineDependencyInjector = EngineDependencyInjector.getInstance();
         MovementEngine movementEngine = engineDependencyInjector.Resolve<MovementEngine>();
-        GameMaster gameMaster = engineDependencyInjector.Resolve<GameMaster>();
+        gameMaster = engineDependencyInjector.Resolve<GameMaster>();
 
         this.animator = Camera.main.GetComponent<Animator>();
-        this.unitMovement = new UnitMovement(this , movementCapacity, gameMaster);
+        this.unitMovement = new UnitMovement(this , movementCapacity, gameMaster, movementEngine);
         this.combat = new Combat(this, movementEngine);
     }
 
@@ -67,11 +68,11 @@ public class Unit : MonoBehaviour
         return MovementEngine.GetInstance().GetTilesOnRange(placedTile, movementCapacity);
     }
 
-    public void Attack(Unit toAttack)
+    public IEnumerator Attack(Unit toAttack)
     {
         if(toAttack == null || toAttack.Equals(this))
         {
-            return;
+            yield break;
         }
 
         foreach (Tile enemyInRange in enemiesInRange)
@@ -89,7 +90,7 @@ public class Unit : MonoBehaviour
 
         if (random.Next(1, 100) >= hitChance)
         {
-            return;
+            yield break;
         }
 
         int lifePoints = this.stats.attack - enemyStatus.deffense;
@@ -112,16 +113,16 @@ public class Unit : MonoBehaviour
         return Math.Max(0, this.stats.attack - rivalStats.deffense);
     }
 
-    public void Move(Tile to)
+    public IEnumerator Move(Tile to)
     {
         if(!movementCandidates.Contains(to))
         {
-            return;
+            yield break;
         }
 
         PathFinder pathFinder = new PathFinder();
         Stack<Tile> tilesToMove = pathFinder.findShortestPath(placedTile, to, movementCandidates);
-        StartCoroutine(StartMovement(tilesToMove));
+        yield return StartMovement(tilesToMove);
 
         placedTile.unitPlaced = null;
         placedTile = to;
@@ -131,9 +132,11 @@ public class Unit : MonoBehaviour
 
     IEnumerator StartMovement(Stack<Tile> path)
     {
+        gameMaster.isSystemBusy = true;
         yield return unitMovement.MoveUnit(path);
         RemoveMovementCandidates();
         yield return highlightEnemies();
+        gameMaster.isSystemBusy = false;
     }
 
     private IEnumerator highlightEnemies()

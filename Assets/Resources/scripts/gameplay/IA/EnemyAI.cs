@@ -11,6 +11,9 @@ public class EnemyAI : MonoBehaviour
 
     private EnemyUnit selected;
 
+    private GameMaster gameMaster;
+
+    public IAQueueExecution iaQueueExecution;
 
     private enum State
     {
@@ -22,10 +25,9 @@ public class EnemyAI : MonoBehaviour
 
     void Start()
     {
-        
+        gameMaster = EngineDependencyInjector.getInstance().Resolve<GameMaster>();  
     }
 
-    // Update is called once per frame
     void Update()
     {
         switch (state)
@@ -61,8 +63,8 @@ public class EnemyAI : MonoBehaviour
 
             Unit unitToAttack = GetUnitToAttackBasedOnDamage(selectedUnit, unitsAtRange);
             Tile tileToMove = GetTileToMove(selectedUnit, unitToAttack);
-            selectedUnit.Move(tileToMove);
-            selectedUnit.Attack(unitToAttack);
+            iaQueueExecution.Enqueue(selectedUnit.Move(tileToMove));
+            iaQueueExecution.Enqueue(selectedUnit.Attack(unitToAttack));
         }
     }
 

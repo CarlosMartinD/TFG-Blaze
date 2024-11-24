@@ -7,7 +7,7 @@ public class AllyUnit : Unit
     public AllyUnit() { 
         highlightColor = Color.red;
     }
-    public bool CanMove()
+    public new bool CanMove()
     {
         GameMaster master = FindObjectOfType<GameMaster>();
         return !master.IsEnemyTurn() == isPlayer && !hasMoved;

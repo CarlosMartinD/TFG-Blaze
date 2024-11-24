@@ -6,7 +6,8 @@ public class AttackTile : OnTileClickedStrategy
 {
     public void ExecuteStrategy(Tile tile)
     {
-        GameMaster.getInstance().selectedUnit.Attack(tile.unitPlaced);
+        Unit attakingUnit = GameMaster.getInstance().selectedUnit;
+        attakingUnit.StartCoroutine(attakingUnit.Attack(tile.unitPlaced));
     }
 
     public bool IsApplicableStrategy(Tile tile)
