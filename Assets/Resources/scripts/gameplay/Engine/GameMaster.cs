@@ -9,16 +9,15 @@ public class GameMaster : MonoBehaviour
 
     public Unit selectedUnit;
     public ISet<Unit> enemySelectedUnits;
-    public GameObject mapParent;
 
     private bool enemyTurn = false;
 
-    public bool somethingTakingAction;
+    public bool isSystemBusy;
 
     public GameMaster()
     {
         gameMaster = this;
-        somethingTakingAction = false;
+        isSystemBusy = false;
         enemySelectedUnits = new HashSet<Unit>();    
     }
 
