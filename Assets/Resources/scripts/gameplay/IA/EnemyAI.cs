@@ -55,7 +55,7 @@ public class EnemyAI : MonoBehaviour
         
         foreach (Unit selectedUnit in selectableUnits)
         {
-            List<Tile> unitsAtRange = selectedUnit.detectEnemiesInRange(selectedUnit.movementCapacity + selectedUnit.rangeAttack);
+            List<Tile> unitsAtRange = selectedUnit.combat.DetectEnemiesInRange(selectedUnit.movementCapacity + selectedUnit.rangeAttack);
 
             if (unitsAtRange.Count == 0) continue;
 
