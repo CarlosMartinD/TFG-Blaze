@@ -18,6 +18,6 @@ public class MovementCandidatesOnTileClick : OnTileClickedStrategy
     bool OnTileClickedStrategy.IsApplicableStrategy(Tile tile)
     {
         GameMaster gameMaster = GameMaster.getInstance();
-        return gameMaster.selectedUnit == null && tile.unitPlaced != null && tile.unitPlaced.CanMove();
+        return !gameMaster.isSystemBusy && gameMaster.selectedUnit == null && tile.unitPlaced != null && tile.unitPlaced.CanMove();
     }
 }

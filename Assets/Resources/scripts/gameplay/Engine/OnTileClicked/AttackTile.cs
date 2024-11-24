@@ -13,6 +13,7 @@ public class AttackTile : OnTileClickedStrategy
     public bool IsApplicableStrategy(Tile tile)
     {
         GameMaster gameMaster = GameMaster.getInstance();
-        return gameMaster.selectedUnit != null && gameMaster.selectedUnit.enemiesInRange.Count > 0 && gameMaster.selectedUnit.enemiesInRange.Contains(tile);
+        return !gameMaster.isSystemBusy && gameMaster.selectedUnit != null && gameMaster.selectedUnit.enemiesInRange.Count > 0 
+            && gameMaster.selectedUnit.enemiesInRange.Contains(tile);
     }
 }

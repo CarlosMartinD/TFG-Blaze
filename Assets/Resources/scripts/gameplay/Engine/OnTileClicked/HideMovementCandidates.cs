@@ -28,6 +28,6 @@ public class UnselectUnitTileStrategy : OnTileClickedStrategy
         }
         GameMaster gm = GameMaster.getInstance();
 
-        return gm.selectedUnit == tile.unitPlaced || gm.enemySelectedUnits.Contains(tile.unitPlaced);
+        return !gm.isSystemBusy && gm.selectedUnit == tile.unitPlaced || gm.enemySelectedUnits.Contains(tile.unitPlaced);
     }
 }
