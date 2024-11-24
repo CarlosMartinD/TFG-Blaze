@@ -880,6 +880,9 @@ MonoBehaviour:
   mapParent: {fileID: 1228262157}
   mapWidth: 13
   mapHeight: 6
+  gameMaster: {fileID: 0}
+  allyUnits: []
+  enemyUnits: []
 --- !u!4 &178251475 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6729960926296625742, guid: 260e9cd7ab2e4704ea7fe6fbd22bfb60, type: 3}
@@ -2636,11 +2639,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6729960926296625742, guid: 260e9cd7ab2e4704ea7fe6fbd22bfb60, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.0536013
+      value: -3.053601
       objectReference: {fileID: 0}
     - target: {fileID: 6729960926296625742, guid: 260e9cd7ab2e4704ea7fe6fbd22bfb60, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.2679789
+      value: -1.267979
       objectReference: {fileID: 0}
     - target: {fileID: 6729960926296625742, guid: 260e9cd7ab2e4704ea7fe6fbd22bfb60, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3303,13 +3306,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79fe36100ba5a07468b9c92a79aaa63e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapEngine: {fileID: 0}
   selectedUnit: {fileID: 0}
-  mapParent: {fileID: 1228262157}
-  mapWidth: 13
-  mapHeight: 6
-  allyUnits: []
-  enemyUnits: []
-  somethingTakingAction: 0
+  isSystemBusy: 0
 --- !u!4 &970810701
 Transform:
   m_ObjectHideFlags: 0
@@ -3335,6 +3334,7 @@ GameObject:
   m_Component:
   - component: {fileID: 976196055}
   - component: {fileID: 976196054}
+  - component: {fileID: 976196056}
   m_Layer: 0
   m_Name: EnemyAI
   m_TagString: Untagged
@@ -3354,6 +3354,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 190f8d0c6c4a6c5469637a62c8e7c35e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  iaQueueExecution: {fileID: 976196056}
 --- !u!4 &976196055
 Transform:
   m_ObjectHideFlags: 0
@@ -3369,6 +3370,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 204089834}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &976196056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 976196053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c40165bd5f3844849a8baeaee2ad1bd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &985453811 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6729960926296625742, guid: 260e9cd7ab2e4704ea7fe6fbd22bfb60, type: 3}
@@ -6100,6 +6113,10 @@ PrefabInstance:
       propertyPath: stats
       value: 
       objectReference: {fileID: 2125311910869607000}
+    - target: {fileID: -6764669345316808522, guid: 957056390467cac4aa81355912270ec8, type: 3}
+      propertyPath: isPlayer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -6764669345316808522, guid: 957056390467cac4aa81355912270ec8, type: 3}
       propertyPath: damageIcon
       value: 
