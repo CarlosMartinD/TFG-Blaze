@@ -9,25 +9,18 @@ public class Tile : MonoBehaviour
     public Unit unitPlaced;
     public Obstacles obstacles;
 
+    private List<OnTileClickedStrategy> onTileClickedStrategies;
     private SpriteRenderer spriteRenderer;
 
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-
+        onTileClickedStrategies = EngineDependencyInjector.getInstance().Resolve<List<OnTileClickedStrategy>>();
     }
 
     void OnMouseDown()
     {
-        GameMaster gameMaster = GameMaster.getInstance();
-        List<OnTileClickedStrategy> clickedStrategies = new List<OnTileClickedStrategy>();
-
-        clickedStrategies.Add(new AttackTile());
-        clickedStrategies.Add(new UnselectUnitTileStrategy());
-        clickedStrategies.Add(new MovementStrategyOnTileClick());
-        clickedStrategies.Add(new MovementCandidatesOnTileClick());
-
-        foreach (OnTileClickedStrategy onTileClickedStrategy in clickedStrategies)
+        foreach (OnTileClickedStrategy onTileClickedStrategy in onTileClickedStrategies)
         {
             if (onTileClickedStrategy.IsApplicableStrategy(this))
             {

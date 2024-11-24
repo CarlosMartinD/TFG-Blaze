@@ -22,8 +22,6 @@ public class Unit : MonoBehaviour
     public DamageIcon damageIcon;
 
     private int moveSpeed = 2;
-
-
     private Animator animator;
 
     private void Start()

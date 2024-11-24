@@ -10,6 +10,7 @@ public class DamageIcon : MonoBehaviour
     public GameObject particleEffect;
 
     public TextMeshPro textMeshPro;
+
     void Start()
     {
         Instantiate(particleEffect, transform.position, Quaternion.identity);

@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEditor.Experimental.GraphView;
 
 public class MovementEngine
 {
@@ -11,8 +9,11 @@ public class MovementEngine
     private static Comparer<int> descendingComparer;
 
     private static int[][]  variation;
-    private MovementEngine()
+
+    private MapEngine mapEngine;
+    public MovementEngine()
     {
+        mapEngine = EngineDependencyInjector.getInstance().Resolve<MapEngine>();
         descendingComparer = Comparer<int>.Create((x, y) => y.CompareTo(x));
         variation = new int[][] { new int[] { 0, -1 }, new int[] { 1, 0 }, new int[] { -1, 0 }, new int[] { 0, 1 } };
     }
@@ -53,9 +54,9 @@ public class MovementEngine
     {
 
         GameMaster gameMaster = GameMaster.getInstance();
-        int maximunX = gameMaster.mapWidth;
-        int maximunY = gameMaster.mapHeight;
-        Tile[,] map = gameMaster.mapMatrix;
+        int maximunX = mapEngine.mapWidth;
+        int maximunY = mapEngine.mapHeight;
+        Tile[,] map = mapEngine.mapMatrix;
 
         while (!toVisit.IsEmpty())
         {

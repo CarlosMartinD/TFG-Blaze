@@ -11,6 +11,7 @@ public class EnemyAI : MonoBehaviour
 
     private EnemyUnit selected;
 
+
     private enum State
     {
         WaitingForEnemyTurn,
@@ -49,8 +50,8 @@ public class EnemyAI : MonoBehaviour
     private void TakeTurn()
     {
         state = State.Busy;
-        GameMaster gameMaster = FindObjectOfType<GameMaster>();
-        List<Unit> selectableUnits = gameMaster.enemyUnits;
+        MapEngine mapEngine = EngineDependencyInjector.getInstance().Resolve<MapEngine>();
+        List<Unit> selectableUnits = mapEngine.enemyUnits;
         
         foreach (Unit selectedUnit in selectableUnits)
         {

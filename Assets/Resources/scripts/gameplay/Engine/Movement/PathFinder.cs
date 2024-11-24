@@ -1,13 +1,19 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
-using UnityEditor.Experimental.GraphView;
-using UnityEngine;
+
 
 public class PathFinder
 {
     private ISet<Tile> visited = new HashSet<Tile>();
+
+    private MapEngine mapEngine;
+
+    public PathFinder()
+    {
+       mapEngine = EngineDependencyInjector.getInstance().Resolve<MapEngine>();
+    }
+    
+
     public Stack<Tile> findShortestPath(Tile from, Tile to, ISet<Tile> limitedTiles)
     {
         var descendingComparer = Comparer<int>.Create((x, y) => y.CompareTo(x));
@@ -40,7 +46,7 @@ public class PathFinder
     {
         List<Node> neighbours = new List<Node>();
         int[][] variation = new int[][] { new int[] { -1, 0 }, new int[] { 1, 0 }, new int[] { 0, -1 }, new int[] { 0, 1 } };
-        Tile[,] mapMatrix = GameMaster.getInstance().mapMatrix;
+        Tile[,] mapMatrix = mapEngine.mapMatrix;
 
         foreach (int[] movement in variation)
         {
