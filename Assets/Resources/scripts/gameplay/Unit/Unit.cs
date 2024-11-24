@@ -70,6 +70,7 @@ public class Unit : MonoBehaviour
 
     public IEnumerator Attack(Unit toAttack)
     {
+        gameMaster.isSystemBusy = true;
         if(toAttack == null || toAttack.Equals(this))
         {
             yield break;
@@ -95,6 +96,7 @@ public class Unit : MonoBehaviour
 
         int lifePoints = this.stats.attack - enemyStatus.deffense;
         toAttack.takeDamage(lifePoints);
+        gameMaster.isSystemBusy = false;
     }
 
     public void takeDamage(int damage)
@@ -119,15 +121,19 @@ public class Unit : MonoBehaviour
         {
             yield break;
         }
+        gameMaster.isSystemBusy = true;
 
         PathFinder pathFinder = new PathFinder();
         Stack<Tile> tilesToMove = pathFinder.findShortestPath(placedTile, to, movementCandidates);
-        yield return StartMovement(tilesToMove);
-
         placedTile.unitPlaced = null;
         placedTile = to;
         placedTile.unitPlaced = this;
         hasMoved = true;
+
+        yield return StartMovement(tilesToMove);
+
+        gameMaster.isSystemBusy = false;
+
     }
 
     IEnumerator StartMovement(Stack<Tile> path)
