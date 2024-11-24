@@ -7,10 +7,8 @@ using UnityEngine.UIElements;
 public class Unit : MonoBehaviour
 {
     
-    protected bool hasMoved = false;
-    protected Color highlightColor;
-    public ISet<Tile> movementCandidates;
 
+    public ISet<Tile> movementCandidates;
     public List<Tile> enemiesInRange = new List<Tile>();
 
     public Stats stats;
@@ -21,7 +19,9 @@ public class Unit : MonoBehaviour
     public Tile placedTile;
     public DamageIcon damageIcon;
 
-    private int moveSpeed = 2;
+    protected bool hasMoved = false;
+    protected Color highlightColor;
+
     private Animator animator;
     public UnitMovement unitMovement;
     public Combat combat;
