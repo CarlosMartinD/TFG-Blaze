@@ -21,8 +21,12 @@ public class Unit : MonoBehaviour
     public Tile placedTile;
     public DamageIcon damageIcon;
 
-    private bool onAnimation = false;
+    private Animator animator;
 
+    private void Start()
+    {
+        animator = Camera.main.GetComponent<Animator>();
+    }
     public bool CanMove()
     {
         return !hasMoved;
@@ -49,6 +53,13 @@ public class Unit : MonoBehaviour
             return;
         }
 
+        foreach (Tile enemyInRange in enemiesInRange)
+        {
+            enemyInRange.CleanHighLight();
+        }
+
+        enemiesInRange.Clear();
+
         Stats enemyStatus = toAttack.stats;
 
         int hitChance = Math.Max(0, 100 - Math.Abs(enemyStatus.velocity - this.stats.velocity));
@@ -61,17 +72,17 @@ public class Unit : MonoBehaviour
         }
 
         int lifePoints = this.stats.attack - enemyStatus.deffense;
-        stats.LifePointsVariation(lifePoints);
+        toAttack.takeDamage(lifePoints);
+    }
 
-        Vector3 enemyPosition = toAttack.transform.position;
-        DamageIcon.Instantiate(damageIcon, new Vector3(enemyPosition.x, enemyPosition.y, -3), lifePoints);
-
-        foreach (Tile enemyInRange in enemiesInRange)
+    public void takeDamage(int damage)
+    {
+        if (!stats.LifePointsVariation(damage))
         {
-            enemyInRange.CleanHighLight();
+            this.highlightColor = Color.gray;
+            DamageIcon ins = DamageIcon.Instantiate(damageIcon, transform.position, damage);
+            Destroy(gameObject, ins.lifetime);
         }
-
-        enemiesInRange.Clear();
     }
 
     public int DamageRealized(Stats rivalStats)
@@ -98,7 +109,6 @@ public class Unit : MonoBehaviour
 
     IEnumerator StartMovement(Stack<Tile> path)
     {
-        onAnimation = true;
         yield return move(path);
         foreach (Tile movementCandidate in movementCandidates)
         {
@@ -108,7 +118,6 @@ public class Unit : MonoBehaviour
         movementCandidates.Clear();
         highlightEnemies();
         yield return highlightEnemies();
-        onAnimation = false;
     }
 
     private IEnumerator move(Stack<Tile> path)
