@@ -11,6 +11,7 @@ public class MovementEngine
     private static int[][]  variation;
 
     private MapEngine mapEngine;
+
     public MovementEngine()
     {
         mapEngine = EngineDependencyInjector.getInstance().Resolve<MapEngine>();
