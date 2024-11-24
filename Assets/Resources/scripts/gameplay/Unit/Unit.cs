@@ -15,11 +15,14 @@ public class Unit : MonoBehaviour
 
     public Stats stats;
     public bool isPlayer = true;
-    private int moveSpeed = 2;
     public int movementCapacity = 3;
     public int rangeAttack = 1;
+
     public Tile placedTile;
     public DamageIcon damageIcon;
+
+    private int moveSpeed = 2;
+
 
     private Animator animator;
 
@@ -39,6 +42,34 @@ public class Unit : MonoBehaviour
         {
             item.Highlight(Color.red);
         }
+    }
+
+    public List<Tile> detectEnemiesInRange(int range)
+    {
+        ISet<Tile> candidateTilesWithEnemies = MovementEngine.GetInstance().GetTilesOnRange(placedTile, range);
+        List<Tile> unitsInRange = new List<Tile>();
+
+        foreach (Tile candidateTileWithEnemy in candidateTilesWithEnemies)
+        {
+            if (candidateTileWithEnemy.unitPlaced == null || !unitIsEnemy(candidateTileWithEnemy.unitPlaced))
+            {
+                continue;
+            }
+
+            unitsInRange.Add(candidateTileWithEnemy);
+        }
+
+        return unitsInRange;
+    }
+
+    public void RemoveMovementCandidates()
+    {
+        foreach (Tile movementCandidate in movementCandidates)
+        {
+            movementCandidate.CleanHighLight();
+        }
+
+        movementCandidates.Clear();
     }
 
     public ISet<Tile> MovementCandidates()
@@ -110,13 +141,7 @@ public class Unit : MonoBehaviour
     IEnumerator StartMovement(Stack<Tile> path)
     {
         yield return move(path);
-        foreach (Tile movementCandidate in movementCandidates)
-        {
-            movementCandidate.CleanHighLight();
-        }
-
-        movementCandidates.Clear();
-        highlightEnemies();
+        RemoveMovementCandidates();
         yield return highlightEnemies();
     }
 
@@ -154,24 +179,6 @@ public class Unit : MonoBehaviour
         {
             GameMaster.getInstance().selectedUnit = null;
         }
-    }
-
-    public List<Tile> detectEnemiesInRange(int range)
-    {
-        ISet<Tile> candidateTilesWithEnemies = MovementEngine.GetInstance().GetTilesOnRange(placedTile, range);
-        List<Tile> unitsInRange = new List<Tile>();
-
-        foreach (Tile candidateTileWithEnemy in candidateTilesWithEnemies)
-        {
-            if (candidateTileWithEnemy.unitPlaced == null || !unitIsEnemy(candidateTileWithEnemy.unitPlaced))
-            {
-                continue;
-            }
-
-            unitsInRange.Add(candidateTileWithEnemy);
-        }
-
-        return unitsInRange;
     }
 
     private bool unitIsEnemy(Unit unit)
