@@ -66,6 +66,7 @@ public class EnemyAI : MonoBehaviour
             iaQueueExecution.Enqueue(selectedUnit.Move(tileToMove));
             iaQueueExecution.Enqueue(selectedUnit.Attack(unitToAttack));
         }
+        state = State.WaitingForEnemyTurn;
     }
 
     private Unit GetUnitToAttackBasedOnDamage(Unit unit, List<Tile> unitsAtRange)

@@ -39,7 +39,7 @@ public class GameMaster : MonoBehaviour
         }
     }
 
-   private void EndTurn()
+   public void EndTurn()
     {
         enemyTurn = !enemyTurn;
 

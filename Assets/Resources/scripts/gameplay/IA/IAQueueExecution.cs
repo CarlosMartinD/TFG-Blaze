@@ -35,9 +35,10 @@ public class IAQueueExecution : MonoBehaviour
         {
             IEnumerator current = coroutineQueue.Dequeue();
             yield return StartCoroutine(current);
+            yield return new WaitForSecondsRealtime(0.2f);
         }
 
         yield return new WaitUntil(() => !gameMaster.isSystemBusy);
-        yield return new WaitForSecondsRealtime(0.2f);
+        gameMaster.EndTurn();
     }
 }
