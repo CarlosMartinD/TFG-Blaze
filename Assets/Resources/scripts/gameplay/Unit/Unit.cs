@@ -21,9 +21,9 @@ public abstract class Unit : MonoBehaviour
     protected bool hasMoved = false;
     protected Color highlightColor;
 
-    private Animator animator;
-    private GameMaster gameMaster;
-    private MapEngine mapEngine;
+    protected Animator animator;
+    protected GameMaster gameMaster;
+    protected MapEngine mapEngine;
 
     public UnitMovement unitMovement;
     public Combat combat;
@@ -107,6 +107,7 @@ public abstract class Unit : MonoBehaviour
         animator.SetTrigger("shake");
         if (!stats.LifePointsVariation(damage))
         {
+            Shine();
             this.highlightColor = Color.gray;
             Destroy(gameObject, ins.lifetime);
         }
@@ -160,6 +161,11 @@ public abstract class Unit : MonoBehaviour
         {
             GameMaster.getInstance().selectedUnit = null;
         }
+    }
+
+    public void ResetUnit()
+    {
+        hasMoved = false;
     }
 
     protected abstract void Shine();

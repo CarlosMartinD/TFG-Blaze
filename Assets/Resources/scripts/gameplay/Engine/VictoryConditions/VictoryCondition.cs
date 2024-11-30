@@ -5,16 +5,23 @@ using UnityEngine;
 
 public abstract class VictoryCondition : MonoBehaviour
 {
-    public AssetBundle myLoadedAssetBundle;
+    public GameObject victory;
+
+    public GameObject defeat;
+
+    public void Update()
+    {
+        checkVictoryCondition();
+    }
 
     public void checkVictoryCondition()
     {
         if(AllyVictoryCondition())
         {
-
+            victory.SetActive(true);
         } else if (EnemyVictoryCondition())
         {
-
+            victory.SetActive(true);
         }
     }
 

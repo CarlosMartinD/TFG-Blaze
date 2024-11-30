@@ -9,4 +9,9 @@ public class EnemyUnit : Unit
         this.isPlayer = false;
         this.highlightColor = Color.gray;
     }
+
+    protected override void Shine()
+    {
+        mapEngine.enemyUnits.Remove(this);
+    }
 }

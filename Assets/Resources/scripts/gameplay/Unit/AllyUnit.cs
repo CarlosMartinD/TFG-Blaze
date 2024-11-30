@@ -12,4 +12,9 @@ public class AllyUnit : Unit
         GameMaster master = FindObjectOfType<GameMaster>();
         return !master.IsEnemyTurn() == isPlayer && !hasMoved;
     }
+
+    protected override void Shine()
+    {
+        mapEngine.allyUnits.Remove(this);
+    }
 }
