@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class Unit : MonoBehaviour
+public abstract class Unit : MonoBehaviour
 {
     
-
     public ISet<Tile> movementCandidates;
     public List<Tile> enemiesInRange = new List<Tile>();
 
@@ -23,9 +22,12 @@ public class Unit : MonoBehaviour
     protected Color highlightColor;
 
     private Animator animator;
-    private GameMaster gameMaster;  
+    private GameMaster gameMaster;
+    private MapEngine mapEngine;
+
     public UnitMovement unitMovement;
     public Combat combat;
+    public Weapon weapon;
 
     private void Start()
     {
@@ -37,6 +39,7 @@ public class Unit : MonoBehaviour
         this.animator = Camera.main.GetComponent<Animator>();
         this.unitMovement = new UnitMovement(this , movementCapacity, gameMaster, movementEngine);
         this.combat = new Combat(this, movementEngine);
+        this.mapEngine = EngineDependencyInjector.getInstance().Resolve<MapEngine>();
     }
 
     public bool CanMove()
@@ -94,8 +97,7 @@ public class Unit : MonoBehaviour
             yield break;
         }
 
-        int lifePoints = this.stats.attack - enemyStatus.deffense;
-        toAttack.takeDamage(lifePoints);
+        combat.Attack(toAttack);
         gameMaster.isSystemBusy = false;
     }
 
@@ -159,4 +161,6 @@ public class Unit : MonoBehaviour
             GameMaster.getInstance().selectedUnit = null;
         }
     }
+
+    protected abstract void Shine();
 }
