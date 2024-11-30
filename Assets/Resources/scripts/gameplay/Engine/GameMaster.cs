@@ -42,7 +42,7 @@ public class GameMaster : MonoBehaviour
    public void EndTurn()
     {
         enemyTurn = !enemyTurn;
-
+        cleanTurn();
 
         if (selectedUnit != null)
         {
@@ -53,6 +53,19 @@ public class GameMaster : MonoBehaviour
         {
             EnemyAI enemyAI = FindObjectOfType<EnemyAI>();
             enemyAI.OnTurnEnemyStarted();
+        }
+    }
+
+    private void cleanTurn()
+    {
+        foreach(Unit unit in mapEngine.allyUnits)
+        {
+            unit.ResetUnit();
+        }
+
+        foreach (Unit unit in mapEngine.enemyUnits)
+        {
+            unit.ResetUnit();
         }
     }
 
