@@ -15,7 +15,7 @@ public class Stats : MonoBehaviour
     public bool LifePointsVariation(int lifeVariation)
     {
         life -= lifeVariation;
-        return lifeVariation > 0;
+        return life > 0;
     }
 
 
