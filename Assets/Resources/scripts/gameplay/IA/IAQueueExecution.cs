@@ -40,5 +40,6 @@ public class IAQueueExecution : MonoBehaviour
 
         yield return new WaitUntil(() => !gameMaster.isSystemBusy);
         gameMaster.EndTurn();
+        isProcessing = false;
     }
 }
