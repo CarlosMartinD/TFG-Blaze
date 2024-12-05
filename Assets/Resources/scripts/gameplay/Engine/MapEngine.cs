@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -48,7 +48,6 @@ public class MapEngine : MonoBehaviour
                         mapMatrix[x, y] = tileComponent;
                         tileComponent.x = x;
                         tileComponent.y = y;
-                        assignUnit(tileComponent);
                     }
                 }
                 else
@@ -57,18 +56,30 @@ public class MapEngine : MonoBehaviour
                 }
             }
         }
-    }
 
-    private void assignUnit(Tile tile)
-    {
-        Unit unitPlaced = tile.unitPlaced;
-        if (unitPlaced == null)
+        Unit[] units = FindObjectsOfType<Unit>();
+        foreach(Unit unit in units)
         {
-            return;
+            assignUnit(unit);
         }
 
+        Obstacles[] obstacles = FindObjectsOfType<Obstacles>();
+        foreach (Obstacles obstacle in obstacles)
+        {
+            AssignObstacle(obstacle);
+        }
+
+    }
+
+    private void assignUnit(Unit unit)
+    {
+        Vector3 unitPost = unit.transform.position;
+        Tile tile = mapMatrix[(int)Math.Truncate(unitPost.x), (int)Math.Truncate(unitPost.y)];
+        tile.unitPlaced = unit;
+        unit.placedTile = tile;
+
         List<Unit> unitListToAssign;
-        if (unitPlaced is AllyUnit)
+        if (unit is AllyUnit)
         {
             unitListToAssign = allyUnits;
         }
@@ -77,6 +88,13 @@ public class MapEngine : MonoBehaviour
             unitListToAssign = enemyUnits;
         }
 
-        unitListToAssign.Add(unitPlaced);
+        unitListToAssign.Add(unit);
+    }
+
+    private void AssignObstacle(Obstacles obstacle)
+    {
+        Vector3 unitPost = obstacle.transform.position;
+        Tile tile = mapMatrix[(int)Math.Truncate(unitPost.x), (int)Math.Truncate(unitPost.y)];
+        tile.obstacles = obstacle;
     }
 }

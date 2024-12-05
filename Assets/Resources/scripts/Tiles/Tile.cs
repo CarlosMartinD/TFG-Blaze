@@ -1,8 +1,9 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class Tile : MonoBehaviour
+public class Tile : MonoBehaviour, IPointerClickHandler
 {
     public int x, y;
     public float hoverAmount;
@@ -58,5 +59,20 @@ public class Tile : MonoBehaviour
     public void Reset()
     {
         spriteRenderer.color = Color.white;
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.button != PointerEventData.InputButton.Right)
+        {
+            return;
+        }
+
+        if(unitPlaced == null)
+        {
+            return;
+        }
+
+
     }
 }

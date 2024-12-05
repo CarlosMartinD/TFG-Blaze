@@ -31,19 +31,11 @@ public class GameMaster : MonoBehaviour
         gameMaster = this;
     }
 
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            EndTurn();
-        }
-    }
-
    public void EndTurn()
     {
         enemyTurn = !enemyTurn;
         cleanTurn();
-
+         
         if (selectedUnit != null)
         {
             selectedUnit = null;

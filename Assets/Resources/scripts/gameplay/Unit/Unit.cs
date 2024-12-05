@@ -21,7 +21,8 @@ public abstract class Unit : MonoBehaviour
     protected bool hasMoved = false;
     protected Color highlightColor;
 
-    protected Animator animator;
+    protected Animator cameraAnimator;
+    protected Animator unitAnimator;
     protected GameMaster gameMaster;
     protected MapEngine mapEngine;
 
@@ -36,7 +37,8 @@ public abstract class Unit : MonoBehaviour
         MovementEngine movementEngine = engineDependencyInjector.Resolve<MovementEngine>();
         gameMaster = engineDependencyInjector.Resolve<GameMaster>();
 
-        this.animator = Camera.main.GetComponent<Animator>();
+        this.unitAnimator = this.GetComponent<Animator>();
+        this.cameraAnimator = Camera.main.GetComponent<Animator>();
         this.unitMovement = new UnitMovement(this , movementCapacity, gameMaster, movementEngine);
         this.combat = new Combat(this, movementEngine);
         this.mapEngine = EngineDependencyInjector.getInstance().Resolve<MapEngine>();
@@ -52,8 +54,18 @@ public abstract class Unit : MonoBehaviour
         movementCandidates = unitMovement.GetMovementCandidates(placedTile);
         foreach (Tile item in movementCandidates)
         {
-            item.Highlight(Color.red);
+            item.Highlight(Color.gray);
         }
+    }
+    public IEnumerator ShowMovementCadidatesAsync()
+    {
+        movementCandidates = unitMovement.GetMovementCandidates(placedTile);
+        foreach (Tile item in movementCandidates)
+        {
+            item.Highlight(Color.gray);
+        }
+
+        yield return null;
     }
 
     public void RemoveMovementCandidates()
@@ -97,20 +109,45 @@ public abstract class Unit : MonoBehaviour
             yield break;
         }
 
-        combat.Attack(toAttack);
+        yield return AttackAnimation();
+        yield return combat.Attack(toAttack);
         gameMaster.isSystemBusy = false;
     }
 
-    public void takeDamage(int damage)
+    private IEnumerator AttackAnimation()
     {
-        DamageIcon ins = DamageIcon.Instantiate(damageIcon, transform.position, damage);
-        animator.SetTrigger("shake");
-        if (!stats.LifePointsVariation(damage))
+        unitAnimator.SetTrigger("attack");
+
+        float waitFrames = Time.deltaTime * 50;
+        yield return new WaitForSeconds(waitFrames);
+
+        while (unitAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "attack")
         {
+            yield return null;
+        }
+    }
+
+    public IEnumerator takeDamage(int damage)
+    {
+        bool isAlive = !stats.LifePointsVariation(damage);
+        if(!isAlive)
+        {
+            unitAnimator.SetTrigger("shine");
             Shine();
             this.highlightColor = Color.gray;
-            Destroy(gameObject, ins.lifetime);
+            float waitFrames = Time.deltaTime * 10;
+            yield return new WaitForSeconds(waitFrames);
+        } else
+        {
+            unitAnimator.SetTrigger("hurt");
+            float waitFrames = Time.deltaTime * 20;
+            yield return new WaitForSeconds(waitFrames);
         }
+
+        DamageIcon ins = DamageIcon.Instantiate(damageIcon, transform.position, damage);
+        Destroy(gameObject, ins.lifetime);
+
+        yield return null;
     }
 
     public int DamageRealized(Stats rivalStats)
@@ -126,6 +163,7 @@ public abstract class Unit : MonoBehaviour
         }
         gameMaster.isSystemBusy = true;
 
+        unitAnimator.SetBool("running", true);
         PathFinder pathFinder = new PathFinder();
         Stack<Tile> tilesToMove = pathFinder.findShortestPath(placedTile, to, movementCandidates);
         placedTile.unitPlaced = null;
@@ -135,6 +173,7 @@ public abstract class Unit : MonoBehaviour
 
         yield return StartMovement(tilesToMove);
 
+        unitAnimator.SetBool("running", false);
         gameMaster.isSystemBusy = false;
 
     }

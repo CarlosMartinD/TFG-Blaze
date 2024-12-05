@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: EnemyArmoredKnightAnimation
+  m_Controller: {fileID: 9100000, guid: fa92551f2a0a4384ea5a01ecbc30c124, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 5b3265f662a586047b762d23e40667ea, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 5d694e838de201148b7ad9a9b4b9c85f, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 93c4bfb51838d9b4d913ba7aa3928b75, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 41de264df8295e9469d3e70f73b23753, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: f96f8455d99f06841b6cd2e0d37bbd49, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 80e1dc327c035ca46800edf24ac86218, type: 2}

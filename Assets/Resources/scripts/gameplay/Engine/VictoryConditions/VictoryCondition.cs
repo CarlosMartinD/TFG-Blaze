@@ -1,13 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public abstract class VictoryCondition : MonoBehaviour
 {
     public GameObject victory;
 
     public GameObject defeat;
+
+    public Object scene;
 
     public void Update()
     {
@@ -23,6 +23,16 @@ public abstract class VictoryCondition : MonoBehaviour
         {
             victory.SetActive(true);
         }
+    }
+
+    public void nextScene()
+    {
+        SceneManager.LoadScene(scene.name);
+    }
+
+    public void ResetScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     protected abstract bool AllyVictoryCondition();

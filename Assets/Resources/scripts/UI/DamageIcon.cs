@@ -11,7 +11,7 @@ public class DamageIcon : MonoBehaviour
 
     void Start()
     {
-        Invoke("Destruction", lifetime);
+        
     }
 
     public static DamageIcon Instantiate(DamageIcon original, Vector3 position, int damage)

@@ -33,6 +33,7 @@ public class UnitMovement
             Tile nextTile = path.Pop();
             Vector3 targetPosition = nextTile.transform.position;
             targetPosition.z = -2;
+            targetPosition.y += 0.302f;//offset of tile
 
             while (Vector2.Distance(unit.transform.position, targetPosition) > 0.01f)
             {

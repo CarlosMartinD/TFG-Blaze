@@ -13,6 +13,8 @@ public class EnemyAI : MonoBehaviour
 
     private GameMaster gameMaster;
 
+    private MapEngine mapEngine;
+
     public IAQueueExecution iaQueueExecution;
 
     private enum State
@@ -25,7 +27,8 @@ public class EnemyAI : MonoBehaviour
 
     void Start()
     {
-        gameMaster = EngineDependencyInjector.getInstance().Resolve<GameMaster>();  
+        gameMaster = EngineDependencyInjector.getInstance().Resolve<GameMaster>();
+        mapEngine = EngineDependencyInjector.getInstance().Resolve<MapEngine>();
     }
 
     void Update()
@@ -52,7 +55,6 @@ public class EnemyAI : MonoBehaviour
     private void TakeTurn()
     {
         state = State.Busy;
-        MapEngine mapEngine = EngineDependencyInjector.getInstance().Resolve<MapEngine>();
         List<Unit> selectableUnits = mapEngine.enemyUnits;
         
         foreach (Unit selectedUnit in selectableUnits)
@@ -63,6 +65,8 @@ public class EnemyAI : MonoBehaviour
 
             Unit unitToAttack = GetUnitToAttackBasedOnDamage(selectedUnit, unitsAtRange);
             Tile tileToMove = GetTileToMove(selectedUnit, unitToAttack);
+
+            iaQueueExecution.Enqueue(selectedUnit.ShowMovementCadidatesAsync());
             iaQueueExecution.Enqueue(selectedUnit.Move(tileToMove));
             iaQueueExecution.Enqueue(selectedUnit.Attack(unitToAttack));
         }
@@ -93,8 +97,7 @@ public class EnemyAI : MonoBehaviour
     private Tile GetTileToMove(Unit selected, Unit toAttack)
     {
 
-        selected.ShowMovementCadidates();
-        ISet<Tile> tileToMove = selected.movementCandidates;
+        ISet<Tile> tileToMove = selected.unitMovement.GetMovementCandidates(selected.placedTile);
         Tile placedTaleAttacked = toAttack.placedTile;
         Tile placedTaleAttSelected = toAttack.placedTile;
 
@@ -103,6 +106,10 @@ public class EnemyAI : MonoBehaviour
         Tile selectedTile = null;
         foreach (Tile tile in tileToMove)
         {
+            if(!tile.IsClear())
+            {
+                continue;
+            }
             int distanceAttacked = Math.Abs(placedTaleAttacked.x - tile.x) + Math.Abs(placedTaleAttSelected.y - tile.y);
             int distanceSelected = Math.Abs(placedTaleAttSelected.x - tile.x) + Math.Abs(placedTaleAttSelected.y - tile.y);
 

@@ -10,9 +10,13 @@ public class IAQueueExecution : MonoBehaviour
 
     private GameMaster gameMaster;
 
+    private TurnEngine turnEngine;
+
     void Start()
     {
         gameMaster = EngineDependencyInjector.getInstance().Resolve<GameMaster>();
+        turnEngine = EngineDependencyInjector.getInstance().Resolve<TurnEngine>();
+
     }
 
     public void Enqueue(IEnumerator coroutine)
@@ -35,11 +39,10 @@ public class IAQueueExecution : MonoBehaviour
         {
             IEnumerator current = coroutineQueue.Dequeue();
             yield return StartCoroutine(current);
-            yield return new WaitForSecondsRealtime(0.2f);
+            yield return new WaitForSecondsRealtime(5f);
         }
 
-        yield return new WaitUntil(() => !gameMaster.isSystemBusy);
-        gameMaster.EndTurn();
+        turnEngine.EndTurnAI();
         isProcessing = false;
     }
 }

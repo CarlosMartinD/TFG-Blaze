@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 public class Combat
@@ -28,16 +29,16 @@ public class Combat
         return enemiesInRange;
     }
 
-    public void Attack(Unit target)
+    public IEnumerator Attack(Unit target)
     {
         if (target == null || target.Equals(unit))
         {
-            return;
+            yield break;
         }
 
         int damage = Math.Max(0, unit.stats.attack - target.stats.deffense);
         damage = CalculateTriangleWeaponVariation(damage, target);
-        target.takeDamage(damage);
+        yield return target.takeDamage(damage);
     }
 
     private int CalculateTriangleWeaponVariation(int damage, Unit target)
