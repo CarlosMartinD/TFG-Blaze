@@ -11,7 +11,7 @@ public class MapEngine : MonoBehaviour
 
     public GameMaster gameMaster;
     public List<Unit> allyUnits;
-    public List<Unit> enemyUnits;
+    public List<EnemyUnit> enemyUnits;
 
     void Start()
     {
@@ -78,17 +78,15 @@ public class MapEngine : MonoBehaviour
         tile.unitPlaced = unit;
         unit.placedTile = tile;
 
-        List<Unit> unitListToAssign;
         if (unit is AllyUnit)
         {
-            unitListToAssign = allyUnits;
+            allyUnits.Add((AllyUnit) unit);  
+
         }
         else
         {
-            unitListToAssign = enemyUnits;
+            enemyUnits.Add((EnemyUnit) unit);
         }
-
-        unitListToAssign.Add(unit);
     }
 
     private void AssignObstacle(Obstacles obstacle)

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7209035781554380697}
   - component: {fileID: 4308670215812754242}
   - component: {fileID: 1945345628071450779}
+  - component: {fileID: 7847657629734609494}
   m_Layer: 0
   m_Name: EnemyArmoredKnight
   m_TagString: Untagged
@@ -97,7 +98,7 @@ Animator:
   m_GameObject: {fileID: 8063853135561412379}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 96d275e63f36a274898d73cdec427c8e, type: 2}
+  m_Controller: {fileID: 22100000, guid: 5995150d97a1dbc46b4812be990a4f06, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -128,6 +129,7 @@ MonoBehaviour:
   placedTile: {fileID: 0}
   damageIcon: {fileID: 652914599298270454, guid: e1ee55f4add195b43a788e5c8f30322f, type: 3}
   weapon: 0
+  iaBehavior: {fileID: 7847657629734609494}
 --- !u!114 &1945345628071450779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,7 +142,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50e841e9dd7aedc40a2eee9af0d7e32f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  life: 5
-  attack: 3
-  deffense: 2
+  life: 20
+  attack: 15
+  deffense: 14
   velocity: 1
+--- !u!114 &7847657629734609494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8063853135561412379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8774a12989e89024587f978643e4b240, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

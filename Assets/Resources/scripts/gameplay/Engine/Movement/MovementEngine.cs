@@ -36,7 +36,6 @@ public class MovementEngine
         PriorityQueue<Tile> toVisit = new PriorityQueue<Tile>(descendingComparer);
         toVisit.Enqueue(from, range);
         MoveIntoNeighbourds(visitedSquares, toVisit, tile => true);
-        visitedSquares.Remove(from);
         return visitedSquares;
     }
 
@@ -47,14 +46,11 @@ public class MovementEngine
         PriorityQueue<Tile> toVisit = new PriorityQueue<Tile>(descendingComparer);
         toVisit.Enqueue(from, range);
         MoveIntoNeighbourds(visitedSquares, toVisit, conditionToVisit);
-        visitedSquares.Remove(from);
         return visitedSquares;
     }
 
     private void MoveIntoNeighbourds(ISet<Tile> visitedSquares, PriorityQueue<Tile> toVisit, Func<Tile, bool> conditionToVisit)
     {
-
-        GameMaster gameMaster = GameMaster.getInstance();
         int maximunX = mapEngine.mapWidth;
         int maximunY = mapEngine.mapHeight;
         Tile[,] map = mapEngine.mapMatrix;

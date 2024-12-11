@@ -15,6 +15,7 @@ public class AllyUnit : Unit
 
     protected override void Shine()
     {
+        placedTile.unitPlaced = null;
         mapEngine.allyUnits.Remove(this);
     }
 }

@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
+  m_LocalScale: {x: 0.19, y: 0.19, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -97,7 +97,7 @@ Animator:
   m_GameObject: {fileID: 3428230059357183319}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 3ca5b8a9c278f8c49b5a7e99dcaa091c, type: 2}
+  m_Controller: {fileID: 22100000, guid: 8e118a415cfaf9f45bd53bab2a806a9b, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -121,12 +121,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemiesInRange: []
-  stats: {fileID: 0}
+  stats: {fileID: -2497642823486081723}
   isPlayer: 1
   movementCapacity: 3
   rangeAttack: 1
   placedTile: {fileID: 0}
-  damageIcon: {fileID: 0}
+  damageIcon: {fileID: 652914599298270454, guid: e1ee55f4add195b43a788e5c8f30322f, type: 3}
   weapon: 0
 --- !u!114 &-2497642823486081723
 MonoBehaviour:
@@ -140,7 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50e841e9dd7aedc40a2eee9af0d7e32f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  life: 5
-  attack: 4
-  deffense: 2
+  life: 20
+  attack: 15
+  deffense: 14
   velocity: 2

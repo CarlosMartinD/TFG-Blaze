@@ -6,43 +6,35 @@ public class IAQueueExecution : MonoBehaviour
 {
     private Queue<IEnumerator> coroutineQueue = new Queue<IEnumerator>();
 
-    private bool isProcessing = false;
-
-    private GameMaster gameMaster;
-
     private TurnEngine turnEngine;
 
     void Start()
     {
-        gameMaster = EngineDependencyInjector.getInstance().Resolve<GameMaster>();
         turnEngine = EngineDependencyInjector.getInstance().Resolve<TurnEngine>();
-
     }
 
     public void Enqueue(IEnumerator coroutine)
     {
         coroutineQueue.Enqueue(coroutine);
-        if(isProcessing)
-        {
-            return;
-        }
-
-        StartCoroutine(ProcessQueue());
     }
 
-    IEnumerator ProcessQueue()
+    public void Enqueue(IEnumerator[] coroutines)
     {
-        isProcessing = true;
-        yield return new WaitForSecondsRealtime(0.2f);
+        foreach(IEnumerator coroutine in coroutines)
+        {
+            Enqueue(coroutine);
+        }
+    }
 
+    public IEnumerator ProcessQueue()
+    {
         while (coroutineQueue.Count > 0)
         {
             IEnumerator current = coroutineQueue.Dequeue();
             yield return StartCoroutine(current);
-            yield return new WaitForSecondsRealtime(5f);
+            yield return WaitForFrames.wait(30);
         }
 
         turnEngine.EndTurnAI();
-        isProcessing = false;
     }
 }

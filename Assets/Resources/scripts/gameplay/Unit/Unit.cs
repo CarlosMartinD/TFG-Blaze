@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 public abstract class Unit : MonoBehaviour
 {
     
-    public ISet<Tile> movementCandidates;
+    public ISet<Tile> movementCandidates = new HashSet<Tile>();
     public List<Tile> enemiesInRange = new List<Tile>();
 
     public Stats stats;
@@ -18,6 +18,7 @@ public abstract class Unit : MonoBehaviour
     public Tile placedTile;
     public DamageIcon damageIcon;
 
+    protected bool hasAttacked = false;
     protected bool hasMoved = false;
     protected Color highlightColor;
 
@@ -56,6 +57,8 @@ public abstract class Unit : MonoBehaviour
         {
             item.Highlight(Color.gray);
         }
+
+        highlightEnemies();
     }
     public IEnumerator ShowMovementCadidatesAsync()
     {
@@ -70,12 +73,8 @@ public abstract class Unit : MonoBehaviour
 
     public void RemoveMovementCandidates()
     {
-        foreach (Tile movementCandidate in movementCandidates)
-        {
-            movementCandidate.CleanHighLight();
-        }
-
-        movementCandidates.Clear();
+        cleanMovementCandidates();
+        cleanEnemiesInRangeTiles();
     }
 
     public ISet<Tile> MovementCandidates()
@@ -91,10 +90,8 @@ public abstract class Unit : MonoBehaviour
             yield break;
         }
 
-        foreach (Tile enemyInRange in enemiesInRange)
-        {
-            enemyInRange.CleanHighLight();
-        }
+        cleanEnemiesInRangeTiles();
+        cleanMovementCandidates();
 
         enemiesInRange.Clear();
 
@@ -111,7 +108,9 @@ public abstract class Unit : MonoBehaviour
 
         yield return AttackAnimation();
         yield return combat.Attack(toAttack);
+        yield return new WaitForSecondsRealtime(0.3f);
         gameMaster.isSystemBusy = false;
+        hasAttacked = true;
     }
 
     private IEnumerator AttackAnimation()
@@ -119,34 +118,31 @@ public abstract class Unit : MonoBehaviour
         unitAnimator.SetTrigger("attack");
 
         float waitFrames = Time.deltaTime * 50;
-        yield return new WaitForSeconds(waitFrames);
-
-        while (unitAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "attack")
+        while (unitAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name != "attack")
         {
-            yield return null;
+            yield return 0;
         }
     }
 
     public IEnumerator takeDamage(int damage)
     {
-        bool isAlive = !stats.LifePointsVariation(damage);
-        if(!isAlive)
-        {
-            unitAnimator.SetTrigger("shine");
-            Shine();
-            this.highlightColor = Color.gray;
-            float waitFrames = Time.deltaTime * 10;
-            yield return new WaitForSeconds(waitFrames);
-        } else
-        {
-            unitAnimator.SetTrigger("hurt");
-            float waitFrames = Time.deltaTime * 20;
-            yield return new WaitForSeconds(waitFrames);
-        }
+        bool isAlive = stats.LifePointsVariation(damage);
+        float waitFrames;
 
         DamageIcon ins = DamageIcon.Instantiate(damageIcon, transform.position, damage);
-        Destroy(gameObject, ins.lifetime);
-
+        if (!isAlive)
+        {
+            Shine();
+            this.highlightColor = Color.gray;
+            yield return shineAnimationWithWait();
+            ins.Destroy();
+            Destroy(gameObject);
+        }
+        else
+        {
+            yield return hurtAnimationWithWait();
+            ins.Destroy();
+        }
         yield return null;
     }
 
@@ -164,6 +160,10 @@ public abstract class Unit : MonoBehaviour
         gameMaster.isSystemBusy = true;
 
         unitAnimator.SetBool("running", true);
+        while(unitAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name != "running")
+        {
+            yield return null;
+        }
         PathFinder pathFinder = new PathFinder();
         Stack<Tile> tilesToMove = pathFinder.findShortestPath(placedTile, to, movementCandidates);
         placedTile.unitPlaced = null;
@@ -183,20 +183,29 @@ public abstract class Unit : MonoBehaviour
         gameMaster.isSystemBusy = true;
         yield return unitMovement.MoveUnit(path);
         RemoveMovementCandidates();
-        yield return highlightEnemies();
+        highlightEnemiesWithTurnAssistance();
         gameMaster.isSystemBusy = false;
     }
 
-    private IEnumerator highlightEnemies()
+    private void highlightEnemies()
     {
+        if(hasAttacked)
+        {
+            return;
+        }
+
         foreach (Tile tileWithEnemy in combat.DetectEnemiesInRange(rangeAttack))
         {
             tileWithEnemy.Highlight(Color.red);
             enemiesInRange.Add(tileWithEnemy);
-            yield return null;
         }
+    }
 
-        if(enemiesInRange.Count == 0)
+    private void highlightEnemiesWithTurnAssistance()
+    {
+        highlightEnemies();
+
+        if (enemiesInRange.Count == 0)
         {
             GameMaster.getInstance().selectedUnit = null;
         }
@@ -205,6 +214,47 @@ public abstract class Unit : MonoBehaviour
     public void ResetUnit()
     {
         hasMoved = false;
+        hasAttacked = false;
+        cleanEnemiesInRangeTiles();
+        cleanMovementCandidates();
+    }
+
+    private void cleanEnemiesInRangeTiles()
+    {
+        foreach (Tile tileWithEnemy in enemiesInRange)
+        {
+            tileWithEnemy.CleanHighLight();
+        }
+
+        enemiesInRange = new List<Tile>();
+    }
+
+    private void cleanMovementCandidates()
+    {
+        foreach (Tile movementCandidate in movementCandidates)
+        {
+            movementCandidate.CleanHighLight();
+        }
+
+        movementCandidates = new HashSet<Tile>();
+    }
+
+    private IEnumerator hurtAnimationWithWait()
+    {
+        unitAnimator.SetTrigger("hurt");
+        while (unitAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "hurt")
+        {
+            yield return 0;
+        }
+    }
+
+    private IEnumerator shineAnimationWithWait()
+    {
+        unitAnimator.SetTrigger("shine");
+        while (unitAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "shine")
+        {
+            yield return 0;
+        }
     }
 
     protected abstract void Shine();

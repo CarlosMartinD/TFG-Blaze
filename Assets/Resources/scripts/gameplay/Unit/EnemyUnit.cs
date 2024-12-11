@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class EnemyUnit : Unit
 {
+
+    public IAModule iaBehavior;
+
+
     public EnemyUnit()
     {
         this.isPlayer = false;
@@ -12,6 +16,7 @@ public class EnemyUnit : Unit
 
     protected override void Shine()
     {
+        placedTile.unitPlaced = null;
         mapEngine.enemyUnits.Remove(this);
     }
 }

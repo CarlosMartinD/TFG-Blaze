@@ -140,7 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50e841e9dd7aedc40a2eee9af0d7e32f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  life: 5
-  attack: 4
-  deffense: 2
+  life: 15
+  attack: 17
+  deffense: 4
   velocity: 2

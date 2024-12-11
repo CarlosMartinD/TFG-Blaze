@@ -6,16 +6,9 @@ using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
 {
-
-    private AllyUnit target;
-
-    private EnemyUnit selected;
-
-    private GameMaster gameMaster;
-
     private MapEngine mapEngine;
 
-    public IAQueueExecution iaQueueExecution;
+    private TurnEngine turnEngine;
 
     private enum State
     {
@@ -27,8 +20,8 @@ public class EnemyAI : MonoBehaviour
 
     void Start()
     {
-        gameMaster = EngineDependencyInjector.getInstance().Resolve<GameMaster>();
         mapEngine = EngineDependencyInjector.getInstance().Resolve<MapEngine>();
+        turnEngine = EngineDependencyInjector.getInstance().Resolve<TurnEngine>();
     }
 
     void Update()
@@ -55,70 +48,32 @@ public class EnemyAI : MonoBehaviour
     private void TakeTurn()
     {
         state = State.Busy;
-        List<Unit> selectableUnits = mapEngine.enemyUnits;
-        
-        foreach (Unit selectedUnit in selectableUnits)
-        {
-            List<Tile> unitsAtRange = selectedUnit.combat.DetectEnemiesInRange(selectedUnit.movementCapacity + selectedUnit.rangeAttack);
-
-            if (unitsAtRange.Count == 0) continue;
-
-            Unit unitToAttack = GetUnitToAttackBasedOnDamage(selectedUnit, unitsAtRange);
-            Tile tileToMove = GetTileToMove(selectedUnit, unitToAttack);
-
-            iaQueueExecution.Enqueue(selectedUnit.ShowMovementCadidatesAsync());
-            iaQueueExecution.Enqueue(selectedUnit.Move(tileToMove));
-            iaQueueExecution.Enqueue(selectedUnit.Attack(unitToAttack));
-        }
+        StartCoroutine(ExecuteTurnActions());
         state = State.WaitingForEnemyTurn;
     }
 
-    private Unit GetUnitToAttackBasedOnDamage(Unit unit, List<Tile> unitsAtRange)
+    private IEnumerator ExecuteTurnActions()
     {
-        int maxDamagePercent = -1;
-        Unit selectedUnit = null;
+        bool someEnemyActed = false;
+        List<EnemyUnit> selectableUnits = mapEngine.enemyUnits;
 
-        foreach (Tile tileAtRange in unitsAtRange)
+        foreach (EnemyUnit selectedUnit in selectableUnits)
         {
-            Unit possibleTarget = tileAtRange.unitPlaced;
-            int damateToRealize = unit.DamageRealized(possibleTarget.stats);
-            int percentDamage = (damateToRealize * 100 / possibleTarget.stats.life); 
-
-            if(percentDamage > maxDamagePercent)
+            IEnumerator[] behaviors = selectedUnit.iaBehavior.generateBehavior(selectedUnit);
+            foreach(IEnumerator beahavior in behaviors)
             {
-                maxDamagePercent = percentDamage;
-                selectedUnit = possibleTarget;
+                someEnemyActed = true;
+                yield return beahavior;
+                yield return new WaitForSecondsRealtime(0.2f);
             }
         }
 
-        return selectedUnit;
-    }
-
-    private Tile GetTileToMove(Unit selected, Unit toAttack)
-    {
-
-        ISet<Tile> tileToMove = selected.unitMovement.GetMovementCandidates(selected.placedTile);
-        Tile placedTaleAttacked = toAttack.placedTile;
-        Tile placedTaleAttSelected = toAttack.placedTile;
-
-        int distanceSelect = int.MaxValue;
-
-        Tile selectedTile = null;
-        foreach (Tile tile in tileToMove)
+        if(!someEnemyActed)
         {
-            if(!tile.IsClear())
-            {
-                continue;
-            }
-            int distanceAttacked = Math.Abs(placedTaleAttacked.x - tile.x) + Math.Abs(placedTaleAttSelected.y - tile.y);
-            int distanceSelected = Math.Abs(placedTaleAttSelected.x - tile.x) + Math.Abs(placedTaleAttSelected.y - tile.y);
-
-            if (distanceAttacked <= selected.rangeAttack && distanceSelected <= distanceSelect)
-            {
-                selectedTile = tile;
-            }
+            yield return new WaitForSecondsRealtime(1f);
         }
-
-        return selectedTile;
+        
+        turnEngine.EndTurnAI();
     }
+
 }

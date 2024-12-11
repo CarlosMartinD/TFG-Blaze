@@ -30,8 +30,8 @@ public class EngineDependencyInjector : MonoBehaviour
 
         clickedStrategies.Add(new AttackTile());
         clickedStrategies.Add(new UnselectUnitTileStrategy());
-        clickedStrategies.Add(new MovementStrategyOnTileClick());
         clickedStrategies.Add(new MovementCandidatesOnTileClick());
+        clickedStrategies.Add(new MovementStrategyOnTileClick());
 
         Register(clickedStrategies);
     }

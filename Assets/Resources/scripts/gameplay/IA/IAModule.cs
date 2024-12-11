@@ -2,10 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IAModule
+public abstract class IAModule : MonoBehaviour
 {
-    void action()
-    {
-        
-    }
+    public abstract IEnumerator[] generateBehavior(Unit unit);
 }

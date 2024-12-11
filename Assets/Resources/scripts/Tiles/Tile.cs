@@ -12,6 +12,7 @@ public class Tile : MonoBehaviour, IPointerClickHandler
 
     private List<OnTileClickedStrategy> onTileClickedStrategies;
     private SpriteRenderer spriteRenderer;
+    private StatsPanel statsPanel;
 
     private void Start()
     {
@@ -21,6 +22,11 @@ public class Tile : MonoBehaviour, IPointerClickHandler
 
     void OnMouseDown()
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
         foreach (OnTileClickedStrategy onTileClickedStrategy in onTileClickedStrategies)
         {
             if (onTileClickedStrategy.IsApplicableStrategy(this))
@@ -31,13 +37,47 @@ public class Tile : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    void OnMouseOver()
+    {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            if(unitPlaced == null)
+            {
+                return;
+            }
+
+            if(statsPanel == null)
+            {
+                statsPanel = FindAnyObjectByType<StatsPanel>();
+            }
+
+            statsPanel.SubscribeTo(unitPlaced.stats);
+        }
+    }
+
     private void OnMouseEnter()
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
         transform.localScale += Vector3.one * hoverAmount;
     }
 
     void OnMouseExit()
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
         transform.localScale -= Vector3.one * hoverAmount;
     }
 
@@ -63,6 +103,11 @@ public class Tile : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
         if (eventData.button != PointerEventData.InputButton.Right)
         {
             return;

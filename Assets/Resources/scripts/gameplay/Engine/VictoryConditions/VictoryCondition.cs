@@ -3,11 +3,19 @@ using UnityEngine.SceneManagement;
 
 public abstract class VictoryCondition : MonoBehaviour
 {
-    public GameObject victory;
+    [SerializeField]
+    private GameObject victory;
 
-    public GameObject defeat;
+    [SerializeField]
+    private GameObject defeat;
 
-    public Object scene;
+    [SerializeField]
+    private string scene;
+
+    [SerializeField]
+    private GameObject battleUI;
+
+    private bool gameOver = false;
 
     public void Update()
     {
@@ -16,18 +24,33 @@ public abstract class VictoryCondition : MonoBehaviour
 
     public void checkVictoryCondition()
     {
+        if(gameOver)
+        {
+            return;
+        }
+
         if(AllyVictoryCondition())
         {
             victory.SetActive(true);
-        } else if (EnemyVictoryCondition())
-        {
-            victory.SetActive(true);
+            battleUI.SetActive(false);
+            gameOver = true;
         }
+        else if (EnemyVictoryCondition())
+        {
+            defeat.SetActive(true);
+            battleUI.SetActive(false);
+            gameOver = true;
+
+        }
+
     }
 
     public void nextScene()
     {
-        SceneManager.LoadScene(scene.name);
+        Scene[] scenes = SceneManager.GetAllScenes();
+        Debug.Log("entering");
+        Debug.Log(scene.ToString());
+        SceneManager.LoadScene(scene);
     }
 
     public void ResetScene()

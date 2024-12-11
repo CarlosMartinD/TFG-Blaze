@@ -32,11 +32,6 @@ public class TurnEngine : MonoBehaviour
         enemyTurn = true;
         cleanTurn();
 
-        if (master.selectedUnit != null)
-        {
-            master.selectedUnit = null;
-        }
-
         passTurnImage.color = Color.grey;
         turnText.text = "ENEMY TURN";
 
@@ -55,6 +50,8 @@ public class TurnEngine : MonoBehaviour
 
     private void cleanTurn()
     {
+        master.selectedUnit = null;
+
         foreach (Unit unit in mapEngine.allyUnits)
         {
             unit.ResetUnit();

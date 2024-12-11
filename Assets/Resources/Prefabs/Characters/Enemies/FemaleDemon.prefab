@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 840717004208988817}
   - component: {fileID: 1561199724408896278}
   - component: {fileID: 7619740645071790962}
+  - component: {fileID: 9141300089056894000}
   m_Layer: 0
   m_Name: FemaleDemon
   m_TagString: Untagged
@@ -28,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 918795781950565606}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1, y: 0, z: 0.03694602}
   m_LocalScale: {x: 0.19, y: 0.19, z: 1}
   m_ConstrainProportionsScale: 0
@@ -127,7 +128,8 @@ MonoBehaviour:
   rangeAttack: 1
   placedTile: {fileID: 0}
   damageIcon: {fileID: 652914599298270454, guid: e1ee55f4add195b43a788e5c8f30322f, type: 3}
-  weapon: 0
+  weapon: 2
+  iaBehavior: {fileID: 9141300089056894000}
 --- !u!114 &7619740645071790962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,7 +142,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50e841e9dd7aedc40a2eee9af0d7e32f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  life: 5
+  life: 1
   attack: 3
   deffense: 2
   velocity: 1
+--- !u!114 &9141300089056894000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 918795781950565606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8774a12989e89024587f978643e4b240, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
