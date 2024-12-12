@@ -7,7 +7,7 @@ public class TurnEngine : MonoBehaviour
 
     public MapEngine mapEngine;
 
-    public GameMaster master;
+    public SystemOperatorEngine master;
 
     public Image passTurnImage;
 

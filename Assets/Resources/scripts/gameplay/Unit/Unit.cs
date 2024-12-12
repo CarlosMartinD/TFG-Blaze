@@ -24,7 +24,7 @@ public abstract class Unit : MonoBehaviour
 
     protected Animator cameraAnimator;
     protected Animator unitAnimator;
-    protected GameMaster gameMaster;
+    protected SystemOperatorEngine gameMaster;
     protected MapEngine mapEngine;
 
     public UnitMovement unitMovement;
@@ -36,7 +36,7 @@ public abstract class Unit : MonoBehaviour
 
         EngineDependencyInjector engineDependencyInjector = EngineDependencyInjector.getInstance();
         MovementEngine movementEngine = engineDependencyInjector.Resolve<MovementEngine>();
-        gameMaster = engineDependencyInjector.Resolve<GameMaster>();
+        gameMaster = engineDependencyInjector.Resolve<SystemOperatorEngine>();
 
         this.unitAnimator = this.GetComponent<Animator>();
         this.cameraAnimator = Camera.main.GetComponent<Animator>();
@@ -207,7 +207,7 @@ public abstract class Unit : MonoBehaviour
 
         if (enemiesInRange.Count == 0)
         {
-            GameMaster.getInstance().selectedUnit = null;
+            SystemOperatorEngine.getInstance().selectedUnit = null;
         }
     }
 

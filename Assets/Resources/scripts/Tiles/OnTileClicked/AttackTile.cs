@@ -6,13 +6,13 @@ public class AttackTile : OnTileClickedStrategy
 {
     public void ExecuteStrategy(Tile tile)
     {
-        Unit attakingUnit = GameMaster.getInstance().selectedUnit;
+        Unit attakingUnit = SystemOperatorEngine.getInstance().selectedUnit;
         attakingUnit.StartCoroutine(attakingUnit.Attack(tile.unitPlaced));
     }
 
     public bool IsApplicableStrategy(Tile tile)
     {
-        GameMaster gameMaster = GameMaster.getInstance();
+        SystemOperatorEngine gameMaster = SystemOperatorEngine.getInstance();
         return !gameMaster.isSystemBusy && gameMaster.selectedUnit != null && gameMaster.selectedUnit.enemiesInRange.Count > 0 
             && gameMaster.selectedUnit.enemiesInRange.Contains(tile);
     }

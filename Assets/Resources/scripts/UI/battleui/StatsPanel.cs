@@ -49,18 +49,33 @@ public class StatsPanel : MonoBehaviour, IObserver<Stats>
 
     private void UpdateUI(Stats stats)
     {
-        updatePanelTextInformation();
-        lifeText.text = stats.life.ToString();
-        attackText.text = stats.attack.ToString();
-        defenseText.text = stats.deffense.ToString();
+        if (stats.life <= 0)
+        {
+            RemoveStatsPanel();
+        } else
+        {
+            UpdatePanelTextInformation();
+            lifeText.text = stats.life.ToString();
+            attackText.text = stats.attack.ToString();
+            defenseText.text = stats.deffense.ToString();
+        }
     }
 
-    private void updatePanelTextInformation()
+    private void UpdatePanelTextInformation()
     {
         if (informationTextPanel.activeSelf)
         {
             informationTextPanel.SetActive(false);
             statsVariablePanel.SetActive(true);
+        }
+    }
+
+    private void RemoveStatsPanel()
+    {
+        if (statsVariablePanel.activeSelf)
+        {
+            informationTextPanel.SetActive(true);
+            statsVariablePanel.SetActive(false);
         }
     }
 }

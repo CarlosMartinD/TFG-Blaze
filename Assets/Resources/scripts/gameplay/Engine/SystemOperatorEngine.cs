@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameMaster : MonoBehaviour
+public class SystemOperatorEngine : MonoBehaviour
 {
-    private static GameMaster gameMaster;
+    private static SystemOperatorEngine gameMaster;
 
     public MapEngine mapEngine;
 
@@ -14,14 +14,14 @@ public class GameMaster : MonoBehaviour
 
     public bool isSystemBusy;
 
-    public GameMaster()
+    public SystemOperatorEngine()
     {
         gameMaster = this;
         isSystemBusy = false;
         enemySelectedUnits = new HashSet<Unit>();    
     }
 
-    public static GameMaster getInstance()
+    public static SystemOperatorEngine getInstance()
     {
         return gameMaster;
     }

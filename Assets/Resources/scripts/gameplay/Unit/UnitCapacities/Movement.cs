@@ -9,11 +9,11 @@ public class UnitMovement
 
     private int movementCapacity;
 
-    private GameMaster gameMaster;
+    private SystemOperatorEngine gameMaster;
 
     private Unit unit;
 
-    public UnitMovement(Unit unit, int movementCapacity, GameMaster gameMaster, MovementEngine movementEngine)
+    public UnitMovement(Unit unit, int movementCapacity, SystemOperatorEngine gameMaster, MovementEngine movementEngine)
     {
         this.movementCapacity = movementCapacity;
         this.gameMaster = gameMaster;

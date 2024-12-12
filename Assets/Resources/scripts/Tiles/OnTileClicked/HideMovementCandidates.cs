@@ -7,7 +7,7 @@ public class UnselectUnitTileStrategy : OnTileClickedStrategy
 
     void OnTileClickedStrategy.ExecuteStrategy(Tile tile)
     {
-        GameMaster gm = GameMaster.getInstance();
+        SystemOperatorEngine gm = SystemOperatorEngine.getInstance();
         if (gm.selectedUnit == tile.unitPlaced)
         {
             gm.selectedUnit = null;
@@ -26,7 +26,7 @@ public class UnselectUnitTileStrategy : OnTileClickedStrategy
         {
             return false;
         }
-        GameMaster gm = GameMaster.getInstance();
+        SystemOperatorEngine gm = SystemOperatorEngine.getInstance();
 
         return !gm.isSystemBusy && gm.selectedUnit == tile.unitPlaced || gm.enemySelectedUnits.Contains(tile.unitPlaced);
     }

@@ -4,24 +4,24 @@ using UnityEngine;
 
 public class MapEngine : MonoBehaviour
 {
-    public GameObject mapParent;
+    [SerializeField]
+    private GameObject mapParent;
     public int mapWidth;
     public int mapHeight;
     public Tile[,] mapMatrix;
 
-    public GameMaster gameMaster;
     public List<Unit> allyUnits;
     public List<EnemyUnit> enemyUnits;
 
     void Start()
     {
         mapMatrix = new Tile[mapWidth, mapHeight];
-        gameMaster = EngineDependencyInjector.getInstance().Resolve<GameMaster>();
+        SystemOperatorEngine gameMaster = EngineDependencyInjector.getInstance().Resolve<SystemOperatorEngine>();
         gameMaster.mapEngine = this;
         LoadMapIntoMatrix();
     }
 
-    void LoadMapIntoMatrix()
+    private void LoadMapIntoMatrix()
     {
         if (mapParent == null)
         {

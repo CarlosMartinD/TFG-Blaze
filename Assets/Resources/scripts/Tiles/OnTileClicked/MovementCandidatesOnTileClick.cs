@@ -3,7 +3,7 @@ public class MovementCandidatesOnTileClick : OnTileClickedStrategy
     void OnTileClickedStrategy.ExecuteStrategy(Tile tile)
     {
         tile.unitPlaced.ShowMovementCadidates();
-        GameMaster gm = GameMaster.getInstance();
+        SystemOperatorEngine gm = SystemOperatorEngine.getInstance();
 
 
 
@@ -24,7 +24,7 @@ public class MovementCandidatesOnTileClick : OnTileClickedStrategy
 
     bool OnTileClickedStrategy.IsApplicableStrategy(Tile tile)
     {
-        GameMaster gameMaster = GameMaster.getInstance();
+        SystemOperatorEngine gameMaster = SystemOperatorEngine.getInstance();
         return !gameMaster.isSystemBusy && tile.unitPlaced != null && !tile.unitPlaced.Equals(gameMaster.selectedUnit) && tile.unitPlaced.CanMove();
     }
 }

@@ -6,13 +6,13 @@ public class MovementStrategyOnTileClick : OnTileClickedStrategy
 {
     void OnTileClickedStrategy.ExecuteStrategy(Tile tile)
     {
-        Unit unitToMove = GameMaster.getInstance().selectedUnit;
+        Unit unitToMove = SystemOperatorEngine.getInstance().selectedUnit;
         unitToMove.StartCoroutine(unitToMove.Move(tile));
     }
 
     bool OnTileClickedStrategy.IsApplicableStrategy(Tile tile)
     {
-        GameMaster gameMaster = GameMaster.getInstance();
+        SystemOperatorEngine gameMaster = SystemOperatorEngine.getInstance();
         return !gameMaster.isSystemBusy && gameMaster.selectedUnit != null && gameMaster.selectedUnit.CanMove();
     }
 }

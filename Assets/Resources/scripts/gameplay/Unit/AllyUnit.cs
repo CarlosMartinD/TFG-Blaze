@@ -9,7 +9,7 @@ public class AllyUnit : Unit
     }
     public new bool CanMove()
     {
-        GameMaster master = FindObjectOfType<GameMaster>();
+        SystemOperatorEngine master = FindObjectOfType<SystemOperatorEngine>();
         return !master.IsEnemyTurn() == isPlayer && !hasMoved;
     }
 
