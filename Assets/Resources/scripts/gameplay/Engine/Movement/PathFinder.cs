@@ -13,7 +13,6 @@ public class PathFinder
        mapEngine = EngineDependencyInjector.getInstance().Resolve<MapEngine>();
     }
     
-
     public Stack<Tile> findShortestPath(Tile from, Tile to, ISet<Tile> limitedTiles)
     {
         var descendingComparer = Comparer<int>.Create((x, y) => y.CompareTo(x));

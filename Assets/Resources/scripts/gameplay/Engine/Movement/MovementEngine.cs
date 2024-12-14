@@ -4,11 +4,9 @@ using System.Collections.Generic;
 public class MovementEngine
 {
 
-    private static MovementEngine movementEngine;
-
     private static Comparer<int> descendingComparer;
 
-    private static int[][]  variation;
+    private static int[][] variation;
 
     private MapEngine mapEngine;
 
@@ -17,16 +15,6 @@ public class MovementEngine
         mapEngine = EngineDependencyInjector.getInstance().Resolve<MapEngine>();
         descendingComparer = Comparer<int>.Create((x, y) => y.CompareTo(x));
         variation = new int[][] { new int[] { 0, -1 }, new int[] { 1, 0 }, new int[] { -1, 0 }, new int[] { 0, 1 } };
-    }
-
-    public static MovementEngine GetInstance()
-    {
-        if(movementEngine == null) 
-        {
-            movementEngine = new MovementEngine();
-        }
-
-        return movementEngine;
     }
 
     public ISet<Tile> GetTilesOnRange(Tile from, int range)

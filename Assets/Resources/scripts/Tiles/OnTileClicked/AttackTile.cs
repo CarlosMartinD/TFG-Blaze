@@ -13,7 +13,11 @@ public class AttackTile : OnTileClickedStrategy
     public bool IsApplicableStrategy(Tile tile)
     {
         SystemOperatorEngine gameMaster = SystemOperatorEngine.getInstance();
-        return !gameMaster.isSystemBusy && gameMaster.selectedUnit != null && gameMaster.selectedUnit.enemiesInRange.Count > 0 
+        TurnEngine turnEngine = EngineDependencyInjector.getInstance().Resolve<TurnEngine>();
+
+        return !turnEngine.IsEnemyTurn() && !gameMaster.isSystemBusy 
+            && gameMaster.selectedUnit != null 
+            && gameMaster.selectedUnit.enemiesInRange.Count > 0 
             && gameMaster.selectedUnit.enemiesInRange.Contains(tile);
     }
 }

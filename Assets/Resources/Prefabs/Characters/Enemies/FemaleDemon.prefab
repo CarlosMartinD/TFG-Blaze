@@ -142,10 +142,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50e841e9dd7aedc40a2eee9af0d7e32f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  life: 1
-  attack: 3
-  deffense: 2
-  velocity: 1
+  life: 15
+  attack: 20
+  deffense: 8
+  velocity: 4
 --- !u!114 &9141300089056894000
 MonoBehaviour:
   m_ObjectHideFlags: 0

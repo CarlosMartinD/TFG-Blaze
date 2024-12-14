@@ -26,6 +26,7 @@ public abstract class Unit : MonoBehaviour
     protected Animator unitAnimator;
     protected SystemOperatorEngine gameMaster;
     protected MapEngine mapEngine;
+    protected MovementEngine movementEngine;
 
     public UnitMovement unitMovement;
     public Combat combat;
@@ -35,7 +36,7 @@ public abstract class Unit : MonoBehaviour
     {
 
         EngineDependencyInjector engineDependencyInjector = EngineDependencyInjector.getInstance();
-        MovementEngine movementEngine = engineDependencyInjector.Resolve<MovementEngine>();
+        movementEngine = engineDependencyInjector.Resolve<MovementEngine>();
         gameMaster = engineDependencyInjector.Resolve<SystemOperatorEngine>();
 
         this.unitAnimator = this.GetComponent<Animator>();
@@ -79,7 +80,7 @@ public abstract class Unit : MonoBehaviour
 
     public ISet<Tile> MovementCandidates()
     {
-        return MovementEngine.GetInstance().GetTilesOnRange(placedTile, movementCapacity);
+        return movementEngine.GetTilesOnRange(placedTile, movementCapacity);
     }
 
     public IEnumerator Attack(Unit toAttack)

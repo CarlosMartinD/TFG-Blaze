@@ -4,13 +4,20 @@ using UnityEngine;
 
 public class AllyUnit : Unit
 {
+    private TurnEngine turnEngine;
+
     public AllyUnit() { 
         highlightColor = Color.red;
     }
+
+
     public new bool CanMove()
     {
-        SystemOperatorEngine master = FindObjectOfType<SystemOperatorEngine>();
-        return !master.IsEnemyTurn() == isPlayer && !hasMoved;
+        if(turnEngine == null)
+        {
+            turnEngine = EngineDependencyInjector.getInstance().Resolve<TurnEngine>();
+        }
+        return !turnEngine.IsEnemyTurn() == isPlayer && !hasMoved;
     }
 
     protected override void Shine()

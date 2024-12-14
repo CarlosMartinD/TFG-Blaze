@@ -925,7 +925,6 @@ MonoBehaviour:
   mapParent: {fileID: 1228262157}
   mapWidth: 12
   mapHeight: 5
-  gameMaster: {fileID: 970810700}
   allyUnits: []
   enemyUnits: []
 --- !u!1 &204089833
@@ -3485,7 +3484,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79fe36100ba5a07468b9c92a79aaa63e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapEngine: {fileID: 0}
   selectedUnit: {fileID: 0}
   isSystemBusy: 0
 --- !u!4 &970810701
@@ -7437,7 +7435,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   victory: {fileID: 465778362}
   defeat: {fileID: 927667693}
-  scene: Menu
+  scene: Credits
   battleUI: {fileID: 1800735925}
 --- !u!1001 &2124006061
 PrefabInstance:
@@ -8128,7 +8126,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2846917836481244485, guid: 7e5c25c4f64ebb04b8f3ffc9996a03d5, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

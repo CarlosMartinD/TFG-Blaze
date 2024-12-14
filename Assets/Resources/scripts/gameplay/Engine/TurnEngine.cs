@@ -5,22 +5,21 @@ using UnityEngine.UI;
 public class TurnEngine : MonoBehaviour
 {
 
-    public MapEngine mapEngine;
+    [SerializeField] 
+    private MapEngine mapEngine;
 
-    public SystemOperatorEngine master;
+    [SerializeField] 
+    private SystemOperatorEngine master;
 
-    public Image passTurnImage;
+    [SerializeField]
+    private Image passTurnImage;
 
-    public TextMeshProUGUI turnText;
+    [SerializeField]
+    private TextMeshProUGUI turnText;
 
-    private Color passTurnImageColor;
+    [SerializeField]
+    private bool enemyTurn;
 
-    public bool enemyTurn;
-
-    public void Start()
-    {
-        passTurnImageColor = passTurnImage.color;
-    }
 
     public void EndTurnPlayer()
     {
@@ -61,5 +60,10 @@ public class TurnEngine : MonoBehaviour
         {
             unit.ResetUnit();
         }
+    }
+
+    public bool IsEnemyTurn()
+    {
+        return enemyTurn;   
     }
 }

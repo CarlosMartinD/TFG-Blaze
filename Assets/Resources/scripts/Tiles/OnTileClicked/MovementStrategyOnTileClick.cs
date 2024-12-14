@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class MovementStrategyOnTileClick : OnTileClickedStrategy
 {
     void OnTileClickedStrategy.ExecuteStrategy(Tile tile)
@@ -13,6 +9,8 @@ public class MovementStrategyOnTileClick : OnTileClickedStrategy
     bool OnTileClickedStrategy.IsApplicableStrategy(Tile tile)
     {
         SystemOperatorEngine gameMaster = SystemOperatorEngine.getInstance();
-        return !gameMaster.isSystemBusy && gameMaster.selectedUnit != null && gameMaster.selectedUnit.CanMove();
+        TurnEngine turnEngine = EngineDependencyInjector.getInstance().Resolve<TurnEngine>();
+
+        return !turnEngine.IsEnemyTurn() && !gameMaster.isSystemBusy && gameMaster.selectedUnit != null && gameMaster.selectedUnit.CanMove();
     }
 }

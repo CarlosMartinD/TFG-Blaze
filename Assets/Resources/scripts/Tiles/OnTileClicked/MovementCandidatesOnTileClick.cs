@@ -5,8 +5,6 @@ public class MovementCandidatesOnTileClick : OnTileClickedStrategy
         tile.unitPlaced.ShowMovementCadidates();
         SystemOperatorEngine gm = SystemOperatorEngine.getInstance();
 
-
-
         if (tile.unitPlaced is AllyUnit)
         {
             if (gm.selectedUnit != null)
@@ -24,7 +22,13 @@ public class MovementCandidatesOnTileClick : OnTileClickedStrategy
 
     bool OnTileClickedStrategy.IsApplicableStrategy(Tile tile)
     {
-        SystemOperatorEngine gameMaster = SystemOperatorEngine.getInstance();
-        return !gameMaster.isSystemBusy && tile.unitPlaced != null && !tile.unitPlaced.Equals(gameMaster.selectedUnit) && tile.unitPlaced.CanMove();
+        SystemOperatorEngine gameMaster = EngineDependencyInjector.getInstance().Resolve<SystemOperatorEngine>();
+        TurnEngine turnEngine = EngineDependencyInjector.getInstance().Resolve<TurnEngine>();
+
+        return !turnEngine.IsEnemyTurn() && 
+            !gameMaster.isSystemBusy 
+            && tile.unitPlaced != null 
+            && !tile.unitPlaced.Equals(gameMaster.selectedUnit) 
+            && tile.unitPlaced.CanMove();
     }
 }

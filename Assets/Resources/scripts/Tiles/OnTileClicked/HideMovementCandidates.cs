@@ -26,8 +26,10 @@ public class UnselectUnitTileStrategy : OnTileClickedStrategy
         {
             return false;
         }
-        SystemOperatorEngine gm = SystemOperatorEngine.getInstance();
+        SystemOperatorEngine gm = EngineDependencyInjector.getInstance().Resolve<SystemOperatorEngine>();
+        TurnEngine turnEngine = EngineDependencyInjector.getInstance().Resolve<TurnEngine>();
 
-        return !gm.isSystemBusy && gm.selectedUnit == tile.unitPlaced || gm.enemySelectedUnits.Contains(tile.unitPlaced);
+
+        return !turnEngine.IsEnemyTurn() && !gm.isSystemBusy && gm.selectedUnit == tile.unitPlaced || gm.enemySelectedUnits.Contains(tile.unitPlaced);
     }
 }

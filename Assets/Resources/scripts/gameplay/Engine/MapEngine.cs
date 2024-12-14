@@ -16,8 +16,6 @@ public class MapEngine : MonoBehaviour
     void Start()
     {
         mapMatrix = new Tile[mapWidth, mapHeight];
-        SystemOperatorEngine gameMaster = EngineDependencyInjector.getInstance().Resolve<SystemOperatorEngine>();
-        gameMaster.mapEngine = this;
         LoadMapIntoMatrix();
     }
 

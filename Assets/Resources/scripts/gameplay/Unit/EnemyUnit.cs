@@ -7,7 +7,6 @@ public class EnemyUnit : Unit
 
     public IAModule iaBehavior;
 
-
     public EnemyUnit()
     {
         this.isPlayer = false;
