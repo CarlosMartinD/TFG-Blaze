@@ -13,6 +13,8 @@ public class UnitMovement
 
     private Unit unit;
 
+    private float maxOffsetZ = -0.03694702f * 5;
+
     public UnitMovement(Unit unit, int movementCapacity, SystemOperatorEngine gameMaster, MovementEngine movementEngine)
     {
         this.movementCapacity = movementCapacity;
@@ -32,7 +34,7 @@ public class UnitMovement
         {
             Tile nextTile = path.Pop();
             Vector3 targetPosition = nextTile.transform.position;
-            targetPosition.z = -2;
+            targetPosition.z = -0.03694702f + (maxOffsetZ + 0.03694702f * targetPosition.y);
             targetPosition.y += 0.302f;//offset of tile
 
             while (Vector2.Distance(unit.transform.position, targetPosition) > 0.01f)

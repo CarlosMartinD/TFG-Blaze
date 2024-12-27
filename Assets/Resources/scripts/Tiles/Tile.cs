@@ -13,9 +13,10 @@ public class Tile : MonoBehaviour, IPointerClickHandler
     private List<OnTileClickedStrategy> onTileClickedStrategies;
     private SpriteRenderer spriteRenderer;
     private StatsPanel statsPanel;
-
+    private TileColorResolver tileColorResolver;
     private void Start()
     {
+        tileColorResolver = new TileColorResolver();
         spriteRenderer = GetComponent<SpriteRenderer>();
         onTileClickedStrategies = EngineDependencyInjector.getInstance().Resolve<List<OnTileClickedStrategy>>();
     }
@@ -81,24 +82,26 @@ public class Tile : MonoBehaviour, IPointerClickHandler
         transform.localScale -= Vector3.one * hoverAmount;
     }
 
+ 
     public bool IsClear()
     {
         return unitPlaced == null && obstacles == null;
     }
 
-    public void Highlight(Color color)
+    public void Highlight(Unit unit, Color color)
     {
-        spriteRenderer.color = color;
+        spriteRenderer.color = tileColorResolver.AddColor(color, unit);
     }
 
-    public void CleanHighLight()
+    public void CleanHighLight(Unit unit)
     {
-        spriteRenderer.color = Color.white;
+        spriteRenderer.color = tileColorResolver.RemoveHighLightFromCharacter(unit);
     }
 
     public void Reset()
     {
         spriteRenderer.color = Color.white;
+        tileColorResolver.Reset();
     }
 
     public void OnPointerClick(PointerEventData eventData)

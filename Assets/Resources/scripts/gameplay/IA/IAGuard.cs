@@ -6,13 +6,14 @@ public class IAGuard : IAModule
 {
     public override IEnumerator[] generateBehavior(Unit selectedUnit)
     {
-        List<Tile> unitsAtRange = selectedUnit.combat.DetectEnemiesInRange(selectedUnit.movementCapacity + selectedUnit.rangeAttack);
+        ISet<Tile> movementCandidates = selectedUnit.unitMovement.GetMovementCandidates(selectedUnit.placedTile);
+        ISet<Tile> unitsAtRange = this.DetectEnemiesInRange(movementCandidates, selectedUnit);
         if (unitsAtRange.Count == 0) return new IEnumerator[0];
 
         Unit unitToAttack = GetUnitToAttackBasedOnDamage(selectedUnit, unitsAtRange);
-        Tile tileToMove = GetTileToMove(selectedUnit, unitToAttack);
+        Tile tileToMove = GetTileToMove(selectedUnit, unitToAttack, movementCandidates);
 
-        IEnumerator[] actions = new IEnumerator[4];
+        IEnumerator[] actions = new IEnumerator[3];
         actions[0] = selectedUnit.ShowMovementCadidatesAsync();
         actions[1] = selectedUnit.Move(tileToMove);
         actions[2] = selectedUnit.Attack(unitToAttack);
@@ -21,7 +22,7 @@ public class IAGuard : IAModule
     }
 
 
-    private Unit GetUnitToAttackBasedOnDamage(Unit unit, List<Tile> unitsAtRange)
+    private Unit GetUnitToAttackBasedOnDamage(Unit unit, ISet<Tile> unitsAtRange)
     {
         int maxDamagePercent = -1;
         Unit selectedUnit = null;
@@ -42,10 +43,9 @@ public class IAGuard : IAModule
         return selectedUnit;
     }
 
-    private Tile GetTileToMove(Unit selected, Unit toAttack)
+    private Tile GetTileToMove(Unit selected, Unit toAttack, ISet<Tile> tileToMove)
     {
 
-        System.Collections.Generic.ISet<Tile> tileToMove = selected.unitMovement.GetMovementCandidates(selected.placedTile);
         Tile placedTaleAttacked = toAttack.placedTile;
         Tile placedTaleAttSelected = toAttack.placedTile;
 

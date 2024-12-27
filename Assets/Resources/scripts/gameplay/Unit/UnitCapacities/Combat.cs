@@ -29,6 +29,22 @@ public class Combat
         return enemiesInRange;
     }
 
+    public List<Tile> DetectEnemiesInRangeFromTile(Tile from)
+    {
+        ISet<Tile> tilesWithEnemies = movementEngine.GetTilesOnRange(from, unit.rangeAttack);
+        List<Tile> enemiesInRange = new();
+
+        foreach (Tile tile in tilesWithEnemies)
+        {
+            if (tile.unitPlaced != null && IsEnemy(tile.unitPlaced))
+            {
+                enemiesInRange.Add(tile);
+            }
+        }
+
+        return enemiesInRange;
+    }
+
     public IEnumerator Attack(Unit target)
     {
         if (target == null || target.Equals(unit))

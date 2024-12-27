@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class MapEngine : MonoBehaviour
 {
@@ -12,6 +14,7 @@ public class MapEngine : MonoBehaviour
 
     public List<Unit> allyUnits;
     public List<EnemyUnit> enemyUnits;
+    private static float maxOffsetZ = -0.03694702f * 5;
 
     void Start()
     {
@@ -56,29 +59,32 @@ public class MapEngine : MonoBehaviour
         }
 
         Unit[] units = FindObjectsOfType<Unit>();
-        foreach(Unit unit in units)
+        for(int i = 0; i < units.Length; i++)
         {
-            assignUnit(unit);
+            assignUnit(ref units[i]);
+            units[i].transform.position = ResolveZ(units[i].transform.position);
         }
 
         Obstacles[] obstacles = FindObjectsOfType<Obstacles>();
-        foreach (Obstacles obstacle in obstacles)
+        for (int i = 0; i < units.Length; i++)
         {
-            AssignObstacle(obstacle);
+            AssignObstacle(ref obstacles[i]);
+            obstacles[i].transform.position = ResolveZ(obstacles[i].transform.position);
         }
 
     }
 
-    private void assignUnit(Unit unit)
+    private void assignUnit(ref Unit unit)
     {
         Vector3 unitPost = unit.transform.position;
+        unitPost.z = -0.03694702f + (maxOffsetZ + 0.03694702f * unitPost.y);
         Tile tile = mapMatrix[(int)Math.Truncate(unitPost.x), (int)Math.Truncate(unitPost.y)];
         tile.unitPlaced = unit;
         unit.placedTile = tile;
 
         if (unit is AllyUnit)
         {
-            allyUnits.Add((AllyUnit) unit);  
+            allyUnits.Add((AllyUnit) unit);
 
         }
         else
@@ -87,10 +93,16 @@ public class MapEngine : MonoBehaviour
         }
     }
 
-    private void AssignObstacle(Obstacles obstacle)
+    private void AssignObstacle(ref Obstacles obstacle)
     {
         Vector3 unitPost = obstacle.transform.position;
         Tile tile = mapMatrix[(int)Math.Truncate(unitPost.x), (int)Math.Truncate(unitPost.y)];
         tile.obstacles = obstacle;
+    }
+
+    private Vector3 ResolveZ(Vector3 position)
+    {
+        float z = position.z = -0.03694702f + (maxOffsetZ + 0.03694702f * position.y);
+        return new Vector3(position.x, position.y, z);
     }
 }

@@ -56,7 +56,7 @@ public abstract class Unit : MonoBehaviour
         movementCandidates = unitMovement.GetMovementCandidates(placedTile);
         foreach (Tile item in movementCandidates)
         {
-            item.Highlight(Color.gray);
+            item.Highlight(this, Color.gray);
         }
 
         highlightEnemies();
@@ -66,7 +66,7 @@ public abstract class Unit : MonoBehaviour
         movementCandidates = unitMovement.GetMovementCandidates(placedTile);
         foreach (Tile item in movementCandidates)
         {
-            item.Highlight(Color.gray);
+            item.Highlight(this, Color.gray);
         }
 
         yield return null;
@@ -197,7 +197,7 @@ public abstract class Unit : MonoBehaviour
 
         foreach (Tile tileWithEnemy in combat.DetectEnemiesInRange(rangeAttack))
         {
-            tileWithEnemy.Highlight(Color.red);
+            tileWithEnemy.Highlight(this, Color.red);
             enemiesInRange.Add(tileWithEnemy);
         }
     }
@@ -216,15 +216,15 @@ public abstract class Unit : MonoBehaviour
     {
         hasMoved = false;
         hasAttacked = false;
-        cleanEnemiesInRangeTiles();
-        cleanMovementCandidates();
+        resetEnemiesInRangeTiles();
+        resetMovementCandidates();
     }
 
     private void cleanEnemiesInRangeTiles()
     {
         foreach (Tile tileWithEnemy in enemiesInRange)
         {
-            tileWithEnemy.CleanHighLight();
+            tileWithEnemy.CleanHighLight(this);
         }
 
         enemiesInRange = new List<Tile>();
@@ -234,7 +234,27 @@ public abstract class Unit : MonoBehaviour
     {
         foreach (Tile movementCandidate in movementCandidates)
         {
-            movementCandidate.CleanHighLight();
+            movementCandidate.CleanHighLight(this);
+        }
+
+        movementCandidates = new HashSet<Tile>();
+    }
+
+    private void resetEnemiesInRangeTiles()
+    {
+        foreach (Tile tileWithEnemy in enemiesInRange)
+        {
+            tileWithEnemy.Reset();
+        }
+
+        enemiesInRange = new List<Tile>();
+    }
+
+    private void resetMovementCandidates()
+    {
+        foreach (Tile movementCandidate in movementCandidates)
+        {
+            movementCandidate.Reset();
         }
 
         movementCandidates = new HashSet<Tile>();
