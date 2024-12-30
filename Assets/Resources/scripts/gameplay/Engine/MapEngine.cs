@@ -66,7 +66,7 @@ public class MapEngine : MonoBehaviour
         }
 
         Obstacles[] obstacles = FindObjectsOfType<Obstacles>();
-        for (int i = 0; i < units.Length; i++)
+        for (int i = 0; i < obstacles.Length; i++)
         {
             AssignObstacle(ref obstacles[i]);
             obstacles[i].transform.position = ResolveZ(obstacles[i].transform.position);
