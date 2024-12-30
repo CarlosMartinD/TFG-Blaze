@@ -118,9 +118,11 @@ public abstract class Unit : MonoBehaviour
     {
         unitAnimator.SetTrigger("attack");
 
-        float waitFrames = Time.deltaTime * 50;
-        while (unitAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name != "attack")
+        //Ten frames or end of animation
+        int i = 0;
+        while (unitAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name != "attack" && i < 10)
         {
+            i++;
             yield return 0;
         }
     }
@@ -263,6 +265,11 @@ public abstract class Unit : MonoBehaviour
     private IEnumerator hurtAnimationWithWait()
     {
         unitAnimator.SetTrigger("hurt");
+        while (unitAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name != "hurt")
+        {
+            yield return 0;
+        }
+
         while (unitAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "hurt")
         {
             yield return 0;
@@ -272,6 +279,11 @@ public abstract class Unit : MonoBehaviour
     private IEnumerator shineAnimationWithWait()
     {
         unitAnimator.SetTrigger("shine");
+        while (unitAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name != "shine")
+        {
+            yield return 0;
+        }
+
         while (unitAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "shine")
         {
             yield return 0;
